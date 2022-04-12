@@ -222,6 +222,10 @@ in the configuration file.
 ### Screenshots
 ![screenshot of the command runner tool](screenshots/tool.png)
 
+![screenshot of the command runner tool](screenshots/dark-mode.png)
+
+![screenshot of the command runner tool](screenshots/mobile.png)
+
 ![screenshot of the command runner tool](screenshots/confirmation.png)
 
 ![screenshot of the command runner tool](screenshots/variable-input.png)
@@ -231,7 +235,8 @@ in the configuration file.
 ![screenshot of the command runner tool](screenshots/command-with-optional-flag.png)
 
 ## Credits
-- [Srinath Reddy Dudi(Author & Maintainer)](https://github.com/srinathreddydudi)
+- [Artem Stepanenko(Author & Maintainer)](https://github.com/stepanenko3)
+- [Srinath Reddy Dudi(Author of original advanced version for Nova 3)](https://github.com/srinathreddydudi)
 - [guratr(Author of original package)](https://github.com/guratr)
 
 ## Contributing

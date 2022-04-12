@@ -9,13 +9,20 @@
             <div class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                 <ModalHeader v-text="runningCommand.label" />
 
-                <div class="p-6">
-                    <div class="flex border-b border-40 p-2 flex-col" v-for="variable,index in runningCommand.variables">
-                        <label class="inline-block text-80 pt-2 leading-tight w-full capitalize">{{ variable.label }}</label>
-                        <select v-if="variable.field === 'select'" class="form-control form-select" v-model="variable.value">
-                            <option value="" disabled="disabled">{{ variable.placeholder }}</option>
-                            <option :value="key" v-for="label,key in variable.options">{{ label }}</option>
-                        </select>
+                <div class="p-6 grid gap-6">
+                    <p v-if="runningCommand.help">{{ runningCommand.help }}</p>
+                    
+                    <div v-for="variable,index in runningCommand.variables">
+                        <label class="inline-block text-80 mb-2 leading-tight w-full capitalize">{{ variable.label }}</label>
+
+                        <SelectControl
+                            size="lg"
+                            v-if="variable.field === 'select'"
+                            :dusk="variable.label"
+                            :options="getOptions(variable.options)"
+                            @change="variable.value = $event"
+                        />
+                        
                         <input
                             v-else
                             :type="variable.field"
@@ -25,13 +32,15 @@
                         />
                     </div>
 
-                    <CheckboxWithLabel
-                        v-for="flag,index in runningCommand.flags"
-                        :key="'flag-'+index"
-                        v-model="runningCommand.flags[index].selected"
-                    >
-                        {{ flag.label }}
-                    </CheckboxWithLabel>
+                    <div v-if="runningCommand.flags.length">
+                        <CheckboxWithLabel
+                            v-for="flag,index in runningCommand.flags"
+                            :key="'flag-'+index"
+                            v-model="runningCommand.flags[index].selected"
+                        >
+                            {{ flag.label }}
+                        </CheckboxWithLabel>
+                    </div>
                 </div>
 
                 <ModalFooter>
@@ -48,11 +57,11 @@
                             type="submit"
                             ref="runButton"
                             dusk="confirm-run-button"
-                            component="BasicButton"
                             :disabled="running"
                             :loading="running"
                             @click="runCommand()"
-                            :class="'btn-'+(runningCommand.type || 'primary')"
+                            :component="!runningCommand.type || ['primary', 'danger'].indexOf(runningCommand.type) !== -1 ? (runningCommand.type === 'danger' ? 'DangerButton' : 'DefaultButton') : BasicButton"
+                            :class="!runningCommand.type || ['primary', 'danger'].indexOf(runningCommand.type) !== -1 ? '' : ('btn-' + runningCommand.type)"
                         >
                             {{ runningCommand.label }}
                         </LoadingButton>
@@ -63,12 +72,14 @@
 
         <Heading class="mb-6">{{ heading }}</Heading>
 
-        <card v-if="help" v-html="help" class="p-3"></card>
+        <Template v-if="help">
+            <Card class="p-3">{{ help }}</Card>
+        </Template>
 
         <div class="flex flex-col md:flex-row mb-3" v-if="!Array.isArray(customCommands)">
             <SelectControl
                 class="md:w-1/5 mb-2 md:mb-0"
-                :options="renameKyesInCustomCommands()"
+                :options="getOptions(customCommands, false)"
                 dusk="command-runner-type"
                 size="lg"
                 @change="customCommand.command_type = $event"
@@ -213,14 +224,21 @@
                     flags : []
                 } );
             },
-
-            renameKyesInCustomCommands()
+            getOptions(options, addEmptyOption = true)
             {
-                const data = [];
-                for (let val in this.customCommands) {
+                let data = [];
+
+                if (addEmptyOption) {
                     data.push({
-                        value: val,
-                        label: this.customCommands[val],
+                        value: '',
+                        label: '-',
+                    });
+                }
+
+                for (let option in options) {
+                    data.push({
+                        value: option,
+                        label: options[option],
                     });
                 }
 
@@ -255,7 +273,7 @@
                             this.customCommand.command_type = Object.keys(this.customCommands)[0];
                         }
                     });
-            },
+            }, 
             runCommand() {
 
                 let readyToSubmit = true;
