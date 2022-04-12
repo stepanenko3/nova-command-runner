@@ -1,0 +1,28 @@
+{
+    "name": "stepanenko3/nova-command-runner",
+    "version": "4.0",
+    "description": "Laravel Nova tool for running Artisan and bash(shell) commands.",
+    "keywords": ["laravel", "nova", "Artisan", "commands","shell","bash"],
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "laravel/nova": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stepanenko3\\NovaCommandRunner\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Stepanenko3\\NovaCommandRunner\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
