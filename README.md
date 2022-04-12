@@ -3,7 +3,19 @@
 This [Nova](https://nova.laravel.com) tool lets you run artisan and bash commands directly from nova.
 > This is an extended version of the original package [Nova Command Runner](https://github.com/guratr/nova-command-runner) by [guratr](https://github.com/guratr)
 
+## New in version 4.0
+
+- Compatible with Nova 4.0
+- Dark mode compatibility
+- Responsive
+  
+## Requirements
+
+- `php: >=8.0`
+- `laravel/nova: ^4.0`
+
 ## Features
+
 - Run predefined artisan and shell commands
 - Run custom artisan and shell commands
 - Use variables while running commands
