@@ -33,7 +33,7 @@ This [Nova](https://nova.laravel.com) tool lets you run artisan and bash command
 You can install the nova tool in to a Laravel app that uses [Nova](https://nova.laravel.com) via composer:
 
 ```bash
-composer require stepanenk3/nova-command-runner
+composer require stepanenko3/nova-command-runner
 ```
 
 Next up, you must register the tool with Nova. This is typically done in the `tools` method of the `NovaServiceProvider`.
