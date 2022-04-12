@@ -6,6 +6,7 @@ This [Nova](https://nova.laravel.com) tool lets you run artisan and bash command
 ## New in version 4.0
 
 - Compatible with Nova 4.0
+- Drop compability with Nova 3
 - Dark mode compatibility
 - Responsive
   
