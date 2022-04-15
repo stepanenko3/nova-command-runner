@@ -80,6 +80,7 @@
             <SelectControl
                 class="md:w-1/5 mb-2 md:mb-0"
                 :options="getOptions(customCommands, false)"
+                v-model:selected="getOptions(customCommands, false)[0]"
                 dusk="command-runner-type"
                 size="lg"
                 @change="customCommand.command_type = $event"
