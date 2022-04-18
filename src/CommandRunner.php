@@ -17,8 +17,6 @@ class CommandRunner extends Tool
     public function menu(Request $request)
     {
         return MenuSection::make(__(config('nova-command-runner.navigation_label', 'Command Runner')))
-            ->path('/command-runner')
-            ->icon('adjustments')
-            ->collapsable();
+            ->path('/command-runner');
     }
 }
