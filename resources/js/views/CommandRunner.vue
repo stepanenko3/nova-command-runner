@@ -37,7 +37,7 @@
                         <CheckboxWithLabel
                             v-for="flag,index in runningCommand.flags"
                             :key="'flag-'+index"
-                            v-model="runningCommand.flags[index].selected"
+                            @input="runningCommand.flags[index].selected = $event.target.checked"
                         >
                             {{ flag.label }}
                         </CheckboxWithLabel>
