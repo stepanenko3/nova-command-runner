@@ -7,6 +7,12 @@
         "php": ">=8.0",
         "laravel/nova": "^4.0"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../nova"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Stepanenko3\\NovaCommandRunner\\": "src/"
