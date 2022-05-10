@@ -3,7 +3,7 @@
 namespace Stepanenko3\NovaCommandRunner\Http\Middleware;
 
 use Laravel\Nova\Nova;
-use Stepanenko3\NovaCommandRunner\CommandRunner;
+use Stepanenko3\NovaCommandRunner\CommandRunnerTool;
 
 class Authorize
 {
@@ -29,6 +29,6 @@ class Authorize
      */
     public function matchesTool($tool)
     {
-        return $tool instanceof CommandRunner;
+        return $tool instanceof CommandRunnerTool;
     }
 }
