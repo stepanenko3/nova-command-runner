@@ -7,7 +7,7 @@ use Laravel\Nova\Tool;
 use Illuminate\Http\Request;
 use Laravel\Nova\Menu\MenuSection;
 
-class CommandRunner extends Tool
+class CommandRunnerTool extends Tool
 {
     public function boot()
     {
