@@ -34,7 +34,7 @@ class RunCommand implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(CommandDto $command, RunDto $run )
+    public function __construct(CommandDto $command, RunDto $run)
     {
         $this->command = $command;
         $this->run = $run;
@@ -47,20 +47,20 @@ class RunCommand implements ShouldQueue
      */
     public function handle()
     {
-        $this->run = CommandService::runCommand( $this->command, $this->run );
+        $this->run = CommandService::runCommand($this->command, $this->run);
 
         $history = CommandService::getHistory();
 
         $updated_history = [];
-        foreach ($history as $entry){
+        foreach ($history as $entry) {
 
-            if( isset($entry['id']) && $entry['id'] === $this->run->getId() ){
+            if (isset($entry['id']) && $entry['id'] === $this->run->getId()) {
                 $entry = $this->run->toArray();
             }
 
-            array_push( $updated_history, $entry );
+            array_push($updated_history, $entry);
         }
 
-        CommandService::saveHistory( $updated_history );
+        CommandService::saveHistory($updated_history);
     }
 }

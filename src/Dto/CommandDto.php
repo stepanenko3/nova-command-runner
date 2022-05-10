@@ -1,4 +1,5 @@
 <?php
+
 namespace Stepanenko3\NovaCommandRunner\Dto;
 
 use Illuminate\Http\Request;
@@ -24,23 +25,22 @@ class CommandDto
      * @param Request $request
      * @return CommandDto
      */
-    public static function createFromRequest(Request $request )
+    public static function createFromRequest(Request $request)
     {
         $command = new self();
-        $command->setRawCommand( $request->input('command.command') );
-        $command->setParsedCommand( $request->input('command.command') );
+        $command->setRawCommand($request->input('command.command'));
+        $command->setParsedCommand($request->input('command.command'));
 
         // Build command by replacing variables
         $variables = $request->input('command.variables');
-        if( is_array($variables) ){
-            foreach ($variables as $variable ){
-                if( isset($variable['label']) && isset($variable['value']) ){
+        if (is_array($variables)) {
+            foreach ($variables as $variable) {
+                if (isset($variable['label']) && isset($variable['value'])) {
                     if (strpos($variable['label'], '--') !== false) {
                         $variableName = explode('=', $variable['label'])[0];
                         $command->setParsedCommand(
-                            str_replace('{'.$variable['label'].'}',  $variableName . '=' .$variable['value'], $command->getParsedCommand() )
+                            str_replace('{' . $variable['label'] . '}',  $variableName . '=' . $variable['value'], $command->getParsedCommand())
                         );
-
                     } else {
                         $command->setParsedCommand(
                             str_replace('{' . $variable['label'] . '}', $variable['value'], $command->getParsedCommand())
@@ -52,15 +52,15 @@ class CommandDto
 
         // Build command by adding optional flags
         $flags = $request->input('command.flags');
-        if( is_array($flags) ){
-            foreach ($flags as $flag){
-                if(isset($flag['selected']) && isset($flag['flag']) && $flag['selected'] ){
-                    $command->setParsedCommand( $command->getParsedCommand() . ' '.$flag['flag'] );
+        if (is_array($flags)) {
+            foreach ($flags as $flag) {
+                if (isset($flag['selected']) && isset($flag['flag']) && $flag['selected']) {
+                    $command->setParsedCommand($command->getParsedCommand() . ' ' . $flag['flag']);
                 }
             }
         }
 
-        $command->setType( $request->input('command.command_type'));
+        $command->setType($request->input('command.command_type'));
 
         return $command;
     }
@@ -76,7 +76,7 @@ class CommandDto
     /**
      * @param mixed $raw_command
      */
-    public function setRawCommand( $raw_command )
+    public function setRawCommand($raw_command)
     {
         $this->raw_command = $raw_command;
     }
@@ -92,7 +92,7 @@ class CommandDto
     /**
      * @param mixed $variables
      */
-    public function setVariables( $variables )
+    public function setVariables($variables)
     {
         $this->variables = $variables;
     }
@@ -108,7 +108,7 @@ class CommandDto
     /**
      * @param mixed $flags
      */
-    public function setFlags( $flags )
+    public function setFlags($flags)
     {
         $this->flags = $flags;
     }
@@ -124,7 +124,7 @@ class CommandDto
     /**
      * @param mixed $parsed_command
      */
-    public function setParsedCommand( $parsed_command )
+    public function setParsedCommand($parsed_command)
     {
         $this->parsed_command = $parsed_command;
     }
@@ -140,7 +140,7 @@ class CommandDto
     /**
      * @param mixed $type
      */
-    public function setType( $type )
+    public function setType($type)
     {
         $this->type = $type;
     }

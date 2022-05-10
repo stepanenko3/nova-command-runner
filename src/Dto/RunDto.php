@@ -1,5 +1,7 @@
 <?php
+
 namespace Stepanenko3\NovaCommandRunner\Dto;
+
 /**
  * Class RunDto
  * @package Stepanenko3\NovaCommandRunner\Dto
@@ -67,7 +69,7 @@ class RunDto
      * @param $ran_at
      * @return $this
      */
-    public function setRanAt( $ran_at )
+    public function setRanAt($ran_at)
     {
         $this->ran_at = $ran_at;
         return $this;
@@ -85,7 +87,7 @@ class RunDto
      * @param $id
      * @return $this
      */
-    public function setId( $id )
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
@@ -103,7 +105,7 @@ class RunDto
      * @param $command
      * @return $this
      */
-    public function setCommand( $command )
+    public function setCommand($command)
     {
         $this->command = $command;
         return $this;
@@ -121,7 +123,7 @@ class RunDto
      * @param $type
      * @return $this
      */
-    public function setType( $type )
+    public function setType($type)
     {
         $this->type = $type;
         return $this;
@@ -139,7 +141,7 @@ class RunDto
      * @param $run_by
      * @return $this
      */
-    public function setRunBy( $run_by )
+    public function setRunBy($run_by)
     {
         $this->run_by = $run_by;
         return $this;
@@ -157,7 +159,7 @@ class RunDto
      * @param $status
      * @return $this
      */
-    public function setStatus( $status )
+    public function setStatus($status)
     {
         $this->status = $status;
         return $this;
@@ -175,7 +177,7 @@ class RunDto
      * @param $result
      * @return $this
      */
-    public function setResult( $result )
+    public function setResult($result)
     {
         $this->result = $result;
         return $this;
@@ -193,7 +195,7 @@ class RunDto
      * @param $duration
      * @return $this
      */
-    public function setDuration( $duration )
+    public function setDuration($duration)
     {
         $this->duration = $duration;
         return $this;

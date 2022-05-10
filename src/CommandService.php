@@ -31,50 +31,50 @@ class CommandService
      * @param RunDto $run
      * @return RunDto
      */
-    public static function runCommand( CommandDto $command, RunDto $run )
+    public static function runCommand(CommandDto $command, RunDto $run)
     {
-        if( stripos( $command->getParsedCommand(), '--should-queue' ) ){
+        if (stripos($command->getParsedCommand(), '--should-queue')) {
 
-            [ $parsed_command, $connection, $queue ] = self::parseCommandForQueue( $command->getParsedCommand() );
+            [$parsed_command, $connection, $queue] = self::parseCommandForQueue($command->getParsedCommand());
 
-            $command->setParsedCommand($parsed_command );
-            $run->setType( $command->getType() );
-            $run->setCommand( $parsed_command );
+            $command->setParsedCommand($parsed_command);
+            $run->setType($command->getType());
+            $run->setCommand($parsed_command);
 
-            if( $connection ){
-                if( $connection !== 'sync' ){
-                    return self::queueCommand( $command, $run, $queue, $connection );
+            if ($connection) {
+                if ($connection !== 'sync') {
+                    return self::queueCommand($command, $run, $queue, $connection);
                 }
-            } elseif(config('queue.default') !== 'sync'){
-                return self::queueCommand( $command, $run, $queue, $connection );
+            } elseif (config('queue.default') !== 'sync') {
+                return self::queueCommand($command, $run, $queue, $connection);
             }
         }
 
-        $run->setType( $command->getType() );
-        $run->setCommand( $command->getParsedCommand() );
-        $run->setRanAt( now()->timestamp );
+        $run->setType($command->getType());
+        $run->setCommand($command->getParsedCommand());
+        $run->setRanAt(now()->timestamp);
         $start = microtime(true);
 
         try {
             $buffer = new \Symfony\Component\Console\Output\BufferedOutput();
-            if($command->getType() === self::$TYPE_ARTISAN ){
+            if ($command->getType() === self::$TYPE_ARTISAN) {
                 Artisan::call($command->getParsedCommand(), [], $buffer);
-            } else if ($command->getType() === self::$TYPE_BASH ){
+            } else if ($command->getType() === self::$TYPE_BASH) {
                 Process::fromShellCommandline($command->getParsedCommand(), base_path(), null, null, null)
-                    ->run(function ($type, $message) use ($buffer){
+                    ->run(function ($type, $message) use ($buffer) {
                         $buffer->writeln($message);
                     });
             } else {
-                throw new \Exception('Unknown command type: '.$command->getType() );
+                throw new \Exception('Unknown command type: ' . $command->getType());
             }
-            $run->setResult( $buffer->fetch() );
-            $run->setStatus( 'success' );
+            $run->setResult($buffer->fetch());
+            $run->setStatus('success');
         } catch (\Exception $exception) {
-            $run->setResult( $exception->getMessage() );
+            $run->setResult($exception->getMessage());
             $run->setStatus('error');
         }
 
-        $run->setDuration( round((microtime(true) - $start), 4) );
+        $run->setDuration(round((microtime(true) - $start), 4));
 
         return $run;
     }
@@ -83,30 +83,30 @@ class CommandService
      * @param $command
      * @return array
      */
-    public static function parseCommandForQueue( $command )
+    public static function parseCommandForQueue($command)
     {
-        $command = str_replace('--should-queue', '', $command );
+        $command = str_replace('--should-queue', '', $command);
 
         $queue = null;
         $connection = null;
 
         $parsed = '';
 
-        foreach ( explode(' ', $command ) as $argv ){
-            if( Str::startsWith($argv, '--cr-queue=' ) ){
-                $queue = str_replace('--cr-queue=', '',$argv );
+        foreach (explode(' ', $command) as $argv) {
+            if (Str::startsWith($argv, '--cr-queue=')) {
+                $queue = str_replace('--cr-queue=', '', $argv);
                 continue;
             }
 
-            if( Str::startsWith($argv, '--cr-connection=' ) ){
-                $connection = str_replace('--cr-connection=', '',$argv );
+            if (Str::startsWith($argv, '--cr-connection=')) {
+                $connection = str_replace('--cr-connection=', '', $argv);
                 continue;
             }
 
-            $parsed .= ' '.$argv;
+            $parsed .= ' ' . $argv;
         }
 
-        return [ $parsed, $connection, $queue ];
+        return [$parsed, $connection, $queue];
     }
 
     /**
@@ -116,16 +116,16 @@ class CommandService
      * @param null $connection
      * @return RunDto
      */
-    public static function queueCommand(CommandDto $command, RunDto $run, $queue = null, $connection = null )
+    public static function queueCommand(CommandDto $command, RunDto $run, $queue = null, $connection = null)
     {
-        $job = RunCommand::dispatch( $command, $run )->delay( now()->addSeconds(5) );
+        $job = RunCommand::dispatch($command, $run)->delay(now()->addSeconds(5));
 
-        if( $queue ){
-            $job->onQueue( $queue );
+        if ($queue) {
+            $job->onQueue($queue);
         }
 
-        if( $connection ){
-            $job->onConnection( $connection );
+        if ($connection) {
+            $job->onConnection($connection);
         }
 
         $run->setStatus('pending')
@@ -146,7 +146,7 @@ class CommandService
      * @param $history
      * @return mixed
      */
-    public static function saveHistory( $history )
+    public static function saveHistory($history)
     {
         Cache::forever('nova-command-runner-history', $history);
         return $history;

@@ -22,8 +22,8 @@ class CommandsController
         $data = config('nova-command-runner');
         $raw_commands = isset($data['commands']) ? $data['commands'] : [];
         $commands = [];
-        if(is_array($commands)){
-            foreach ($raw_commands as $label => $command ){
+        if (is_array($commands)) {
+            foreach ($raw_commands as $label => $command) {
                 $parsed = [
                     'label' => $label,
                     'command' => $command['run'],
@@ -35,16 +35,16 @@ class CommandsController
                     'command_type' => isset($command['command_type']) && $command['command_type'] === 'bash' ? 'bash' : 'artisan'
                 ];
 
-                preg_match_all( '~(?<={).+?(?=})~', $command['run'], $matches );
+                preg_match_all('~(?<={).+?(?=})~', $command['run'], $matches);
 
-                if( ! empty($matches[0]) ){
-                    foreach ($matches[0] as $variable ){
-                        $parsed['variables'][$variable] = [ 'label' => $variable, 'field' => 'text', 'placeholder' => $variable, 'value' => '' ];
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $variable) {
+                        $parsed['variables'][$variable] = ['label' => $variable, 'field' => 'text', 'placeholder' => $variable, 'value' => ''];
                     }
                 }
 
-                if(isset($command['flags']) && is_array($command['flags'])){
-                    foreach ( $command[ 'flags' ] as $flag => $label ){
+                if (isset($command['flags']) && is_array($command['flags'])) {
+                    foreach ($command['flags'] as $flag => $label) {
                         array_push($parsed['flags'], [
                             'label' => $label,
                             'flag' => $flag,
@@ -53,8 +53,8 @@ class CommandsController
                     }
                 }
 
-                if(isset($command['variables']) && is_array($command['variables'])){
-                    foreach ($command['variables'] as $variable){
+                if (isset($command['variables']) && is_array($command['variables'])) {
+                    foreach ($command['variables'] as $variable) {
                         $parsed['variables'][$variable['label']] = [
                             'label' => $variable['label'],
                             'field' => isset($variable['field']) ? $variable['field'] : 'text',
@@ -76,9 +76,9 @@ class CommandsController
 
         $custom_commands = [];
 
-        if(isset($data['custom_commands']) && is_array($data['custom_commands'])){
-            foreach ($data['custom_commands'] as $custom_command){
-                $custom_commands[$custom_command] = ucfirst($custom_command) .' Command';
+        if (isset($data['custom_commands']) && is_array($data['custom_commands'])) {
+            foreach ($data['custom_commands'] as $custom_command) {
+                $custom_commands[$custom_command] = ucfirst($custom_command) . ' Command';
             }
         }
 
@@ -97,28 +97,28 @@ class CommandsController
      */
     public function run(Request $request)
     {
-        $command = CommandDto::createFromRequest( $request );
+        $command = CommandDto::createFromRequest($request);
 
         // Get history before running the command. Because if the user runs cache:forget command,
         // We can still have our command history after clearing the cache.
         $history = CommandService::getHistory();
 
-        $run = CommandService::runCommand( $command, new RunDto() );
+        $run = CommandService::runCommand($command, new RunDto());
 
-        if( $run->getCommand() === 'cache:forget nova-command-runner-history'){
+        if ($run->getCommand() === 'cache:forget nova-command-runner-history') {
             $run->setResult('Command run history has been cleared successfully.');
-            $history = [ $run->toArray() ];
+            $history = [$run->toArray()];
         } else {
             $history = array_slice($history, 0, config('nova-command-runner.history', 10) - 1);
-            array_unshift($history, $run->toArray() );
+            array_unshift($history, $run->toArray());
         }
 
-        CommandService::saveHistory( $history );
+        CommandService::saveHistory($history);
 
         array_walk($history, function (&$val) {
             $val['time'] = $val['time'] ? Carbon::createFromTimestamp($val['time'])->diffForHumans() : '';
         });
 
-        return [ 'status' => $run->getStatus(), 'result' => nl2br( $run->getResult() ), 'history' => $history ];
+        return ['status' => $run->getStatus(), 'result' => nl2br($run->getResult()), 'history' => $history];
     }
 }

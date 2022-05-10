@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'path' => 'command-runner',
+
     'commands' => [
         // Basic command
         'Clear Cache' => [ 'run' => 'cache:clear', 'type' => 'primary', 'group' => 'Cache', ],
