@@ -3,7 +3,7 @@
 ## [4.1.0](#)
 - Stepanenko3\NovaCommandRunner\CommandRunner migrate to Stepanenko3\NovaCommandRunner\CommandRunnerTool
 
-## [4.0.0 (2022-04-12)](#)
+## [4.0.0](#)
 
 - Compatible with Nova 4.0
 - Drop compability with Nova 3
