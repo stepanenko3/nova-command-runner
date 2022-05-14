@@ -51,7 +51,7 @@ public function tools()
 {
     return [
         // ...
-        new \Stepanenko3\NovaCommandRunner\CommandRunner,
+        new \Stepanenko3\NovaCommandRunner\CommandRunnerTool,
     ];
 }
 ```
