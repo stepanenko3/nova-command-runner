@@ -1,7 +1,7 @@
 # Release Notes
 
 ## [4.1.0](#)
-- Stepanenko3\NovaCommandRunner\CommandRunner migrate to Stepanenko3\NovaCommandRunner\CommandRunnerTool
+- `Stepanenko3\NovaCommandRunner\CommandRunner` migrate to `Stepanenko3\NovaCommandRunner\CommandRunnerTool`
 
 ## [4.0.0](#)
 
