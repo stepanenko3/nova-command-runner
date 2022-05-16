@@ -4,7 +4,10 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/stepanenko3/nova-command-runner.svg?style=flat-square)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 [![License](https://poser.pugx.org/stepanenko3/nova-command-runner/license)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 
+## Description
+
 This [Nova](https://nova.laravel.com) tool lets you run artisan and bash commands directly from nova.
+
 > This is an extended version of the original package [Nova Command Runner](https://github.com/guratr/nova-command-runner) by [guratr](https://github.com/guratr)
 
 ## New in version 4.0
@@ -69,12 +72,15 @@ Add your commands to `config/nova-command-runner.php`
 Click on the `"Command Runner"` menu item in your Nova app to see the tool.
 
 ## Configuration
+
 All the configuration is managed from a single configuration file located in `config/nova-command-runner.php`
 
 ### Adding Commands
+
 All the commands which needs to be easily accessible should be defined in the `commands` array
 in the configuration file.
 #### Command Options
+
 - run : command to run (E.g. route:cache)
 - type : button class (primary, secondary, success, danger, warning, info, light, dark, link) 
 - group: Group name (optional)
@@ -83,6 +89,7 @@ in the configuration file.
 - flags : Array of optional flags for the command(optional)
 
 #### Examples
+
 ```php
 'commands' => [
 
@@ -188,6 +195,7 @@ in the configuration file.
 ```
 
 ### Other Customizations
+
 ```php
     
     // Limit the command run history to latest 10 runs
@@ -223,7 +231,9 @@ in the configuration file.
       // Disable running of custom commands.
     'custom_commands' => [],
 ```
+
 ### Screenshots
+
 ![screenshot of the command runner tool](screenshots/tool.png)
 
 ![screenshot of the command runner tool](screenshots/dark-mode.png)
@@ -239,6 +249,7 @@ in the configuration file.
 ![screenshot of the command runner tool](screenshots/command-with-optional-flag.png)
 
 ## Credits
+
 - [Artem Stepanenko(Author & Maintainer)](https://github.com/stepanenko3)
 - [Srinath Reddy Dudi(Author of original advanced version for Nova 3)](https://github.com/srinathreddydudi)
 - [guratr(Author of original package)](https://github.com/guratr)
