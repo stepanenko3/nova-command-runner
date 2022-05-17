@@ -4,6 +4,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/stepanenko3/nova-command-runner.svg?style=flat-square)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 [![License](https://poser.pugx.org/stepanenko3/nova-command-runner/license)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 
+
+![screenshot of the command runner tool](screenshots/tool.png)
+
 ## Description
 
 This [Nova](https://nova.laravel.com) tool lets you run artisan and bash commands directly from nova.
@@ -32,8 +35,6 @@ This [Nova](https://nova.laravel.com) tool lets you run artisan and bash command
 - Keep track of command run history
 - No database changes required. Everything is managed from a single config file.
 - Queue long running commands
-
-![screenshot of the command runner tool](screenshots/tool.png)
 
 ## Installation
 
