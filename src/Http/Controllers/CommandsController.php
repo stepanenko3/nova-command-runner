@@ -14,6 +14,11 @@ use Illuminate\Http\Request;
  */
 class CommandsController
 {
+    public function show()
+    {
+        return inertia('NovaCommandRunner');
+    }
+
     /**
      * @return array
      */
