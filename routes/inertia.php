@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Stepanenko3\NovaCommandRunner\Http\Controllers\CommandsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,4 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 |
 */
 
-Route::get('/', function (NovaRequest $request) {
-    return inertia('NovaCommandRunner');
-});
+Route::get('/', [CommandsController::class, 'show']);
