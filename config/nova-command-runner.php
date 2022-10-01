@@ -54,6 +54,9 @@ return [
 
         // Queueing commands with custom connection and queue
         'Clear Cache' => [ 'run' => 'cache:clear --should-queue --cr-connection=database --cr-queue=high', 'type' => 'danger', 'group' => 'Cache' ],
+
+        // Queueing long-running commands causing big output with custom timeout limit and output size
+        'Update Prices' => [ 'run' => 'prices:update', 'type' => 'primary', 'group' => 'Sync', 'timeout' => 120, 'output_size' => 3 ],
     ],
 
     // Limit the command run history to latest 10 runs
@@ -64,6 +67,8 @@ return [
     'help' => '',
     // Allow running of custom artisan and bash(shell) commands
     'custom_commands' => ['artisan','bash'],
+    // Groups whose commands should not be running simultaneously, ['*'] to apply this globally to all commands
+    'unique_command_groups' => [],
 
     // Allow running of custom artisan commands only(disable custom bash(shell) commands)
 //    'custom_commands' => ['artisan'],

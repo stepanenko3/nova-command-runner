@@ -7,6 +7,7 @@ use Stepanenko3\NovaCommandRunner\Dto\CommandDto;
 use Stepanenko3\NovaCommandRunner\Dto\RunDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 /**
  * Class CommandsController
@@ -37,7 +38,10 @@ class CommandsController
                     'type' => isset($command['type']) ? $command['type'] : 'primary',
                     'group' => isset($command['group']) ? $command['group'] : 'Unnamed Group',
                     'help' => isset($command['help']) ? $command['help'] : 'Are you sure you want to run this command?',
-                    'command_type' => isset($command['command_type']) && $command['command_type'] === 'bash' ? 'bash' : 'artisan'
+                    'command_type' => isset($command['command_type']) && $command['command_type'] === 'bash' ? 'bash' : 'artisan',
+                    'output_size' => isset($command['output_size']) ? $command['output_size'] : null,
+                    'timeout' => isset($command['timeout']) ? $command['timeout'] : null,
+                    'unique' => isset($command['unique']) ? $command['unique'] : false,
                 ];
 
                 preg_match_all('~(?<={).+?(?=})~', $command['run'], $matches);
@@ -108,6 +112,14 @@ class CommandsController
         // We can still have our command history after clearing the cache.
         $history = CommandService::getHistory();
 
+        if (!$this->commandCanBeRun($command, $history)) {
+            return [
+                'status' => 'error',
+                'result' => 'Try running this command later.',
+                'history' => $history,
+            ];
+        }
+
         $run = CommandService::runCommand($command, new RunDto());
 
         if ($run->getCommand() === 'cache:forget nova-command-runner-history') {
@@ -125,5 +137,25 @@ class CommandsController
         });
 
         return ['status' => $run->getStatus(), 'result' => nl2br($run->getResult()), 'history' => $history];
+    }
+
+    /**
+     * @param CommandDto $command
+     * @param $history
+     * @return bool
+     */
+    protected function commandCanBeRun(CommandDto $command, $history)
+    {
+        if (!in_array($command->getGroup(), $config = config('nova-command-runner.unique_command_groups'))) {
+            return true;
+        }
+
+        return collect($history)
+            ->filter(function ($entry) use ($command, $config) {
+                $command_exists = $config === ['*'] || $entry['group'] === $command->getGroup();
+
+                return $command_exists && Arr::get($entry, 'status') === 'pending';
+            })
+            ->isEmpty();
     }
 }
