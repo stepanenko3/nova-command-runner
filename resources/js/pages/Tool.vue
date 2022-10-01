@@ -88,7 +88,7 @@
             />
 
             <div class="w-full md:w-3/5 md:px-3 mb-2 md:mb-0">
-                <input type="text" v-model="customCommand.command" placeholder="{{ __('Enter a Command...') }}" class="w-full form-control form-input form-input-bordered">
+                <input type="text" v-model="customCommand.command" :placeholder="this.__('Enter a Command...')" class="w-full form-control form-input form-input-bordered">
             </div>
 
             <DefaultButton
@@ -96,7 +96,7 @@
                 @click="runCustomCommand"
                 class="w-full md:w-1/3"
             >
-                Run
+                {{ __('Run') }}
             </DefaultButton>
         </div>
 
@@ -255,7 +255,6 @@
             },
             runCustomCommand(){
                 if(!this.customCommand.command){
-                    //Nova.error(this.__('Please enter a command'));
                     Nova.error('Please enter a command');
                     return;
                 }
@@ -292,7 +291,6 @@
                     Object.keys(this.runningCommand.variables).forEach( variable => {
                         if( ! this.runningCommand.variables[variable].value ){
                             readyToSubmit = false;
-                            //Nova.error(this.runningCommand.variables[variable].label + ' ' + this.__('is required'));
                             Nova.error(this.runningCommand.variables[variable].label + ' is required');
                         }
                     });
