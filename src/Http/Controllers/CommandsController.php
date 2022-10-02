@@ -96,7 +96,8 @@ class CommandsController
             'history' => $history,
             'help' => isset($data['help']) ? $data['help'] : '',
             'heading' => isset($data['navigation_label']) ? $data['navigation_label'] : 'Command Runner',
-            'custom_commands' => $custom_commands
+            'custom_commands' => $custom_commands,
+            'polling_time' => config('nova-command-runner.polling_time', 1000),
         ];
     }
 
@@ -136,7 +137,11 @@ class CommandsController
             $val['time'] = $val['time'] ? Carbon::createFromTimestamp($val['time'])->diffForHumans() : '';
         });
 
-        return ['status' => $run->getStatus(), 'result' => nl2br($run->getResult()), 'history' => $history];
+        return [
+            'status' => $run->getStatus(),
+            'result' => nl2br($run->getResult()),
+            'history' => $history,
+        ];
     }
 
     /**

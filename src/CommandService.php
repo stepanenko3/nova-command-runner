@@ -8,7 +8,6 @@ use Stepanenko3\NovaCommandRunner\Jobs\RunCommand;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use Symfony\Component\Process\Process;
 
 /**

@@ -4,7 +4,6 @@ namespace Stepanenko3\NovaCommandRunner\Console;
 
 use Illuminate\Console\OutputStyle;
 use Stepanenko3\NovaCommandRunner\CommandService;
-use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\ProgressBar as BaseProgressBar;
 
 class ProgressBar
