@@ -146,7 +146,7 @@ class CommandsController
      */
     protected function commandCanBeRun(CommandDto $command, $history)
     {
-        if (!in_array($command->getGroup(), $config = config('nova-command-runner.unique_command_groups'))) {
+        if (!in_array($command->getGroup(), $config = config('nova-command-runner.unique_command_groups', []))) {
             return true;
         }
 

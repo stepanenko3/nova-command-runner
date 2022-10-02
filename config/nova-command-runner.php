@@ -54,9 +54,6 @@ return [
 
         // Queueing commands with custom connection and queue
         'Clear Cache' => [ 'run' => 'cache:clear --should-queue --cr-connection=database --cr-queue=high', 'type' => 'danger', 'group' => 'Cache' ],
-
-        // Queueing long-running commands causing big output with custom timeout limit and output size
-        'Update Prices' => [ 'run' => 'prices:update', 'type' => 'primary', 'group' => 'Sync', 'timeout' => 120, 'output_size' => 3 ],
     ],
 
     // Limit the command run history to latest 10 runs

@@ -177,6 +177,16 @@ in the configuration file.
         'type' => 'danger',
         'group' => 'Cache',
     ],
+    
+    // Queueing long-running commands with custom timeout limit and output size
+    'Update Prices' => [ 
+        'run' => 'prices:update --should-queue', 
+        'type' => 'primary', 
+        'group' => 'Application', 
+        'timeout' => 120, 
+        // The number of last lines to be displayed in the output
+        'output_size' => 3,
+    ],
 ]
 ```
 
@@ -191,6 +201,9 @@ in the configuration file.
 
 // Any additional info to display on the tool page. Can contain string and html.
 'help' => '',
+
+// Groups whose commands should not be running simultaneously, ['*'] to apply this globally to all commands
+'unique_command_groups' => [],
 
 // Allow running of custom artisan and bash(shell) commands
 'custom_commands' => ['artisan','bash'],
