@@ -258,8 +258,13 @@ Add your command to config commands list
 // Disable running of custom commands.
 'custom_commands' => [],
 
-// Blocks running commands simultaneously under the given group or globally
-'unique_command_groups' => [],
+'without_overlapping' => [
+    // Blocks running commands simultaneously under the given groups. Use '*' for block all groups
+    'groups' => [],
+
+    // Blocks running commands simultaneously. Use '*' for block all groups
+    'commands' => [],
+],
 ```
 
 ### Screenshots

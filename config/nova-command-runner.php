@@ -100,13 +100,13 @@ return [
     // Allow running of custom artisan and bash(shell) commands
     'custom_commands' => ['artisan','bash'],
 
-    // Groups whose commands should not be running simultaneously, ['*'] to apply this globally to all commands
-    'unique_command_groups' => [],
-
     'without_overlapping' => [
+        // Blocks running commands simultaneously under the given groups. Use '*' for block all groups
         'groups' => [
             //
         ],
+
+        // Blocks running commands simultaneously. Use '*' for block all groups
         'commands' => [
             //
         ],

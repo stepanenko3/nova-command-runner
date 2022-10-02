@@ -119,6 +119,8 @@ class CommandService
             $parsed .= ' ' . $argv;
         }
 
+        $parsed = trim($parsed);
+
         return [$parsed, $connection, $queue];
     }
 

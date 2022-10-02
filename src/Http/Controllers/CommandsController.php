@@ -8,6 +8,7 @@ use Stepanenko3\NovaCommandRunner\Dto\RunDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class CommandsController
@@ -145,21 +146,58 @@ class CommandsController
     }
 
     /**
+     * getMatchedPatterns
+     *
+     * @param  mixed $needle
+     * @param  array $array
+     * @return array|false
+     */
+    private function getMatchedPatterns($needle, array $haystack): array | false
+    {
+        $patterns = [];
+        foreach ($haystack as $pattern) {
+            if (Str::is($pattern, $needle)) {
+                $patterns[] = $pattern;
+            }
+        }
+
+        if (count($patterns) > 0) {
+            return $patterns;
+        }
+
+        return false;
+    }
+
+    /**
      * @param CommandDto $command
      * @param $history
      * @return bool
      */
     protected function commandCanBeRun(CommandDto $command, $history)
     {
-        if (!in_array($command->getGroup(), $config = config('nova-command-runner.unique_command_groups', []))) {
+        $group = $command->getGroup();
+        [$command] = CommandService::parseCommandForQueue($command->getParsedCommand());
+
+        $groupPatterns = $this->getMatchedPatterns(
+            $group,
+            config('nova-command-runner.without_overlapping.groups', []),
+        );
+
+        $commandPatterns = $this->getMatchedPatterns(
+            $command,
+            config('nova-command-runner.without_overlapping.commands', []),
+        );
+
+        if ($groupPatterns === false && $commandPatterns === false) {
             return true;
         }
 
         return collect($history)
-            ->filter(function ($entry) use ($command, $config) {
-                $command_exists = $config === ['*'] || $entry['group'] === $command->getGroup();
+            ->filter(function ($entry) use ($groupPatterns, $commandPatterns) {
+                $condition = ($groupPatterns !== false && in_array_wildcard($entry['group'], $groupPatterns))
+                    || ($commandPatterns !== false && in_array_wildcard($entry['run'], $commandPatterns));
 
-                return $command_exists && Arr::get($entry, 'status') === 'pending';
+                return Arr::get($entry, 'status') === 'pending' && $condition;
             })
             ->isEmpty();
     }
