@@ -1,9 +1,8 @@
-# Laravel Nova tool for running Artisan & Shell commands.
+# Laravel Nova tool for running Artisan & Shell commands
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/stepanenko3/nova-command-runner.svg?style=flat-square)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 [![Total Downloads](https://img.shields.io/packagist/dt/stepanenko3/nova-command-runner.svg?style=flat-square)](https://packagist.org/packages/stepanenko3/nova-command-runner)
 [![License](https://poser.pugx.org/stepanenko3/nova-command-runner/license)](https://packagist.org/packages/stepanenko3/nova-command-runner)
-
 
 ![screenshot of the command runner tool](screenshots/tool.png)
 
@@ -13,13 +12,6 @@ This [Nova](https://nova.laravel.com) tool lets you run artisan and bash command
 
 > This is an extended version of the original package [Nova Command Runner](https://github.com/guratr/nova-command-runner) by [guratr](https://github.com/guratr)
 
-## New in version 4.0
-
-- Compatible with Nova 4.0
-- Drop compability with Nova 3
-- Dark mode compatibility
-- Responsive
-  
 ## Requirements
 
 - `php: >=8.0`
@@ -27,14 +19,17 @@ This [Nova](https://nova.laravel.com) tool lets you run artisan and bash command
 
 ## Features
 
-- Run predefined artisan and shell commands
-- Run custom artisan and shell commands
-- Use variables while running commands
-- Prompt the user to specify optional flags while running commands
-- Use predefined values for variables using a select box or prompt the user to enter a value for the variable.
-- Keep track of command run history
-- No database changes required. Everything is managed from a single config file.
-- Queue long running commands
+- ⌨️ Run predefined artisan and shell commands
+- 📝 Run custom artisan and shell commands
+- 📄 Use variables while running commands
+- 🙋‍♂️ Prompt the user to specify optional flags while running commands
+- 📄 Use predefined values for variables using a select box or prompt the user to enter a value for the variable.
+- 📖 Keep track of command run history
+- 💾 No database changes required. Everything is managed from a single config file.
+- 🕔 Queue long running commands
+- ✅ Support command progressbar
+- 📱 Responsive
+- 🕶 Dark mode
 
 ## Installation
 
@@ -80,14 +75,17 @@ All the configuration is managed from a single configuration file located in `co
 
 All the commands which needs to be easily accessible should be defined in the `commands` array
 in the configuration file.
+
 #### Command Options
 
 - run : command to run (E.g. route:cache)
-- type : button class (primary, secondary, success, danger, warning, info, light, dark, link) 
+- type : button class (primary, secondary, success, danger, warning, info, light, dark, link)
 - group: Group name (optional)
 - variables : Array of variables used in the command(optional)
 - command_type : Type of the command.(artisan or bash. Default artisan)
 - flags : Array of optional flags for the command(optional)
+- output_size: crops output of the given command to the specified number of lines
+- timeout: updates the timeout limit for the given queued command
 
 #### Examples
 
@@ -177,6 +175,59 @@ in the configuration file.
         'type' => 'danger',
         'group' => 'Cache',
     ],
+],
+```
+
+### Command with Progress bar
+
+Create Artisan command with progress bar. For example:
+
+```php
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Stepanenko3\NovaCommandRunner\Console\HasNovaProgressBar;
+
+class LongCommand extends Command
+{
+    use HasNovaProgressBar;
+
+    protected $signature = 'command:long';
+
+    public function handle()
+    {
+        $bar = $this->createProgressBar(10);
+
+        foreach (range(1, 10) as $i) {
+            sleep(1);
+
+            $bar->advance();
+        }
+
+        $bar->finish();
+
+        return Command::SUCCESS;
+    }
+}
+```
+
+Add your command to config commands list
+
+```php
+'commands' => [
+    ...
+
+    // Queueing long-running commands with custom timeout limit and output size
+    'Long Command' => [ 
+        'run' => 'command:long --should-queue',  // '--should-queue' is a required option to display the progressbar
+
+        'type' => 'primary', 
+        'group' => 'Application', 
+        'timeout' => 120, // Updates the timeout limit for the given queued command
+        'output_size' => 3, // The number of last lines to be displayed in the output
+    ],
 ]
 ```
 
@@ -192,6 +243,9 @@ in the configuration file.
 // Any additional info to display on the tool page. Can contain string and html.
 'help' => '',
 
+// Groups whose commands should not be running simultaneously, ['*'] to apply this globally to all commands
+'unique_command_groups' => [],
+
 // Allow running of custom artisan and bash(shell) commands
 'custom_commands' => ['artisan','bash'],
 
@@ -203,6 +257,9 @@ in the configuration file.
 
 // Disable running of custom commands.
 'custom_commands' => [],
+
+// Blocks running commands simultaneously under the given group or globally
+'unique_command_groups' => [],
 ```
 
 ### Screenshots
