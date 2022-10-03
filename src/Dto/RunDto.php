@@ -21,6 +21,11 @@ class RunDto
     /**
      * @var string
      */
+    private $group;
+
+    /**
+     * @var string
+     */
     private $type;
 
     /**
@@ -108,6 +113,24 @@ class RunDto
     public function setCommand($command)
     {
         $this->command = $command;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param $group
+     * @return $this
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
         return $this;
     }
 
@@ -209,6 +232,7 @@ class RunDto
         return [
             'id'       => $this->id,
             'type'     => $this->type,
+            'group'    => $this->group,
             'run_by'   => $this->run_by,
             'run'      => $this->command,
             'status'   => $this->status,

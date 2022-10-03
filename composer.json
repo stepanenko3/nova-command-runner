@@ -12,7 +12,8 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "laravel/nova": "^4.0"
+        "laravel/nova": "^4.0",
+        "stepanenko3/laravel-helpers": "*"
     },
     "repositories": [
         {

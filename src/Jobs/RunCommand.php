@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use \Throwable;
 
 /**
  * Class RunCommand
@@ -29,6 +30,8 @@ class RunCommand implements ShouldQueue
      */
     public $run;
 
+    public $timeout;
+
     /**
      * Create a new job instance.
      *
@@ -38,6 +41,10 @@ class RunCommand implements ShouldQueue
     {
         $this->command = $command;
         $this->run = $run;
+
+        if ($command->getTimeout() !== null) {
+            $this->timeout = $command->getTimeout();
+        }
     }
 
     /**
@@ -49,6 +56,28 @@ class RunCommand implements ShouldQueue
     {
         $this->run = CommandService::runCommand($this->command, $this->run);
 
+        $this->updateHistory();
+    }
+
+    /**
+     * @param Throwable $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        $this->run->setStatus('error')
+            ->setResult(str_replace(self::class, 'This command', $exception->getMessage()));
+
+        $this->updateHistory();
+    }
+
+    /**
+     * Update commands history.
+     *
+     * @return void
+     */
+    protected function updateHistory()
+    {
         $history = CommandService::getHistory();
 
         $updated_history = [];
