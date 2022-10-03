@@ -40,6 +40,7 @@ class CommandService
             $command->setParsedCommand($parsed_command);
             $run->setType($command->getType());
             $run->setCommand($parsed_command);
+            $run->setGroup($command->getGroup());
 
             if ($connection) {
                 if ($connection !== 'sync') {
@@ -67,8 +68,20 @@ class CommandService
             } else {
                 throw new \Exception('Unknown command type: ' . $command->getType());
             }
-            $run->setResult($buffer->fetch());
-            $run->setStatus('success');
+
+            $output = $buffer->fetch();
+
+            if ($output_size = $command->getOutputSize()) {
+                $output = collect(explode("\n", $output))
+                    ->filter()
+                    ->reverse()
+                    ->take($output_size)
+                    ->reverse()
+                    ->reduce(fn ($carry, $line) => $carry . "\n" . $line);
+            }
+
+            $run->setStatus('success')
+                ->setResult($output);
         } catch (\Exception $exception) {
             $run->setResult($exception->getMessage());
             $run->setStatus('error');
@@ -105,6 +118,8 @@ class CommandService
 
             $parsed .= ' ' . $argv;
         }
+
+        $parsed = trim($parsed);
 
         return [$parsed, $connection, $queue];
     }

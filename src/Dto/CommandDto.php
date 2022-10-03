@@ -18,8 +18,13 @@ class CommandDto
 
     private $parsed_command;
 
-
     private $type;
+
+    private $group;
+
+    private $output_size;
+
+    private $timeout;
 
     /**
      * @param Request $request
@@ -30,6 +35,9 @@ class CommandDto
         $command = new self();
         $command->setRawCommand($request->input('command.command'));
         $command->setParsedCommand($request->input('command.command'));
+        $command->setGroup($request->input('command.group'));
+        $command->setOutputSize($request->input('command.output_size'));
+        $command->setTimeout($request->input('command.timeout'));
 
         // Build command by replacing variables
         $variables = $request->input('command.variables');
@@ -143,5 +151,53 @@ class CommandDto
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getOutputSize()
+    {
+        return $this->output_size;
+    }
+
+    /**
+     * @param ?int $output_size
+     */
+    public function setOutputSize($output_size)
+    {
+        $this->output_size = $output_size ?: false;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @param ?int $timeout
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param ?string $group
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
     }
 }
