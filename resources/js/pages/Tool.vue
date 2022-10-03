@@ -118,7 +118,7 @@
                 <input
                     type="text"
                     v-model="customCommand.command"
-                    placeholder="Enter a Command..."
+                    :placeholder="this.__('Enter a Command...')"
                     class="w-full form-control form-input form-input-bordered"
                 />
             </div>
@@ -128,7 +128,7 @@
                 @click="runCustomCommand"
                 class="w-full md:w-1/3"
             >
-                Run
+                {{ __('Run') }}
             </DefaultButton>
         </div>
 
@@ -138,7 +138,7 @@
                 class="md:col-span-3 grid gap-2 content-start"
             >
                 <Heading level="2">
-                    {{ group ? group : 'Unnamed group' }}
+                    {{ group ? group : __('Unnamed group') }}
                 </Heading>
                 <template v-for="(command, index) in commands">
                     <LoadingButton
@@ -170,7 +170,7 @@
         </Card>
 
         <div class="flex flex-col md:flex-row justify-between mt-6 mb-6">
-            <heading>History</heading>
+            <heading>{{ __('History') }}</heading>
 
             <div
                 class="md:ml-2 inline-flex items-center shadow rounded-lg bg-white dark:bg-gray-800 px-2 h-8"
@@ -212,37 +212,37 @@
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Command
+                            {{ __('Command') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Type
+                            {{ __('Type') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Run By
+                            {{ __('Run By') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Status
+                            {{ __('Status') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Result
+                            {{ __('Result') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Duration
+                            {{ __('Duration') }}
                         </th>
                         <th
                             class="text-center px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
                         >
-                            Happened
+                            {{ __('Happened') }}
                         </th>
                     </tr>
                 </thead>
@@ -325,9 +325,9 @@
                 groups: [],
                 commands: {},
                 customCommand: {
-                    label: 'Custom Command',
+                    label: this.__('Custom Command'),
                     type: 'primary',
-                    help: 'are you sure you want to run this command?',
+                    help: this.__('Are you sure you want to run this command?'),
                     command_type: 'artisan',
                     command: '',
                     variables: [],
@@ -351,9 +351,9 @@
         methods: {
             clearHistory() {
                 this.openModal({
-                    label: 'Clear Command Run History',
+                    label: this.__('Clear Command Run History'),
                     type: 'primary',
-                    help: 'are you sure you want to clear the command run history?',
+                    help: this.__('Are you sure you want to clear the command run history?'),
                     command_type: 'artisan',
                     command: 'cache:forget nova-command-runner-history',
                     variables: [],
