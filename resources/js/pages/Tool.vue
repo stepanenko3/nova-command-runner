@@ -47,7 +47,7 @@
                                     $event.target.checked
                             "
                         >
-                            <span>{{{ flag.label }}</span>
+                            <span>{{ flag.label }}</span>
                         </CheckboxWithLabel>
                     </div>
                 </div>
