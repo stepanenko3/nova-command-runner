@@ -1,31 +1,23 @@
 <template>
     <div>
-        <Modal
-            :show="modalOpen"
-            tabindex="-1"
-            data-testid="command-runner-modal"
-            role="dialog"
-        >
-            <div
-                class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
-            >
-                <ModalHeader v-text="runningCommand.label" />
+        <Modal :show="modalOpen" tabindex="-1" data-testid="command-runner-modal" role="dialog">
+            <div class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <ModalHeader>{{ runningCommand.label }}</ModalHeader>
 
                 <div class="p-6 grid gap-6">
                     <p v-if="runningCommand.help">{{ runningCommand.help }}</p>
 
-                    <div v-for="(variable, index) in runningCommand.variables">
-                        <label
-                            class="inline-block text-80 mb-2 leading-tight w-full capitalize"
-                            >{{ variable.label }}</label
-                        >
+                    <div v-for="(variable, index) in runningCommand.variables" :key="index">
+                        <label class="inline-block text-80 mb-2 leading-tight w-full capitalize">
+                            {{ variable.label }}
+                        </label>
 
                         <SelectControl
                             size="lg"
                             v-if="variable.field === 'select'"
                             :dusk="variable.label"
                             :options="getOptions(variable.options)"
-                            :selected="getSelectedOption(variable.options)"
+                            v-model:selected="variable.value"
                             @change="variable.value = $event"
                         />
 
@@ -42,10 +34,7 @@
                         <CheckboxWithLabel
                             v-for="(flag, index) in runningCommand.flags"
                             :key="'flag-' + index"
-                            @input="
-                                runningCommand.flags[index].selected =
-                                    $event.target.checked
-                            "
+                            @input="runningCommand.flags[index].selected = $event.target.checked"
                         >
                             <span>{{ flag.label }}</span>
                         </CheckboxWithLabel>
@@ -70,20 +59,14 @@
                             :loading="running"
                             @click="runCommand()"
                             :component="
-                                !runningCommand.type ||
-                                ['primary', 'danger'].indexOf(
-                                    runningCommand.type
-                                ) !== -1
+                                !runningCommand.type || ['primary', 'danger'].indexOf(runningCommand.type) !== -1
                                     ? runningCommand.type === 'danger'
                                         ? 'DangerButton'
                                         : 'DefaultButton'
                                     : BasicButton
                             "
                             :class="
-                                !runningCommand.type ||
-                                ['primary', 'danger'].indexOf(
-                                    runningCommand.type
-                                ) !== -1
+                                !runningCommand.type || ['primary', 'danger'].indexOf(runningCommand.type) !== -1
                                     ? ''
                                     : 'btn-' + runningCommand.type
                             "
@@ -101,10 +84,7 @@
             <Card class="p-3">{{ help }}</Card>
         </Template>
 
-        <div
-            class="flex flex-col md:flex-row mb-3"
-            v-if="!Array.isArray(customCommands)"
-        >
+        <div class="flex flex-col md:flex-row mb-3" v-if="!Array.isArray(customCommands)">
             <SelectControl
                 class="md:w-1/5 mb-2 md:mb-0"
                 :options="getOptions(customCommands, false)"
@@ -123,20 +103,13 @@
                 />
             </div>
 
-            <DefaultButton
-                size="lg"
-                @click="runCustomCommand"
-                class="w-full md:w-1/3"
-            >
+            <DefaultButton size="lg" @click="runCustomCommand" class="w-full md:w-1/3">
                 {{ __('Run') }}
             </DefaultButton>
         </div>
 
         <Card class="grid md:grid-cols-12 gap-6 p-6">
-            <div
-                v-for="group in groups"
-                class="md:col-span-3 grid gap-2 content-start"
-            >
+            <div v-for="(group, index) in groups" class="md:col-span-3 grid gap-2 content-start" :key="index">
                 <Heading level="2">
                     {{ group ? group : __('Unnamed group') }}
                 </Heading>
@@ -149,19 +122,18 @@
                         :disabled="running"
                         @click="openModal(command)"
                         :component="
-                            !command.type ||
-                            ['primary', 'danger'].indexOf(command.type) !== -1
+                            !command.type || ['primary', 'danger'].indexOf(command.type) !== -1
                                 ? command.type === 'danger'
                                     ? 'DangerButton'
                                     : 'DefaultButton'
                                 : BasicButton
                         "
                         :class="
-                            !command.type ||
-                            ['primary', 'danger'].indexOf(command.type) !== -1
+                            !command.type || ['primary', 'danger'].indexOf(command.type) !== -1
                                 ? ''
                                 : 'btn-' + command.type
                         "
+                        :key="index"
                     >
                         {{ command.label }}
                     </LoadingButton>
@@ -172,21 +144,14 @@
         <div class="flex flex-col md:flex-row justify-between mt-6 mb-6">
             <heading>{{ __('History') }}</heading>
 
-            <div
-                class="md:ml-2 inline-flex items-center shadow rounded-lg bg-white dark:bg-gray-800 px-2 h-8"
-            >
-                <ToolbarButton
-                    @click.prevent="getData"
-                    :loading="loading"
-                    type="refresh"
-                    v-tooltip="__('Refresh')"
-                />
+            <div class="md:ml-2 inline-flex items-center shadow rounded-lg bg-white dark:bg-gray-800 px-2 h-8">
+                <ToolbarButton @click.prevent="getData" :loading="loading" type="refresh" v-tooltip="__('Refresh')" />
 
                 <ToolbarButton
                     @click.prevent="playing = !playing"
                     :class="{
                         'text-green-500': playing,
-                        'text-gray-500': !playing,
+                        'text-gray-500': !playing
                     }"
                     type="clock"
                     class="w-8 h-8"
@@ -203,10 +168,7 @@
         </div>
 
         <card class="mb-6 overflow-hidden overflow-x-auto relative">
-            <table
-                v-if="history && Object.keys(history).length > 0"
-                class="w-full table-default"
-            >
+            <table v-if="history && Object.keys(history).length > 0" class="w-full table-default">
                 <thead>
                     <tr>
                         <th
@@ -247,7 +209,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="value in history">
+                    <tr v-for="(value, index) in history" :key="index">
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                         >
@@ -266,10 +228,7 @@
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                         >
-                            <Badge
-                                :label="value.status"
-                                :extraClasses="'badge-' + value.status"
-                            />
+                            <Badge :label="value.status" :extraClasses="'badge-' + value.status" />
                         </td>
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
@@ -279,7 +238,7 @@
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                         >
-                            {{ value.duration ? value.duration + " sec." : "" }}
+                            {{ value.duration ? value.duration + ' sec.' : '' }}
                         </td>
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
@@ -289,16 +248,8 @@
                     </tr>
                 </tbody>
             </table>
-            <div
-                v-else
-                class="flex flex-col justify-center items-center px-6 py-8"
-            >
-                <Icon
-                    type="search"
-                    class="mb-3 text-gray-300 dark:text-gray-500"
-                    width="50"
-                    height="50"
-                ></Icon>
+            <div v-else class="flex flex-col justify-center items-center px-6 py-8">
+                <Icon type="search" class="mb-3 text-gray-300 dark:text-gray-500" width="50" height="50"></Icon>
 
                 <h3 class="text-base font-normal mt-3">
                     {{ __('No Logs.') }}
@@ -309,11 +260,11 @@
 </template>
 
 <script>
-    import ToolbarButton from '../components/ToolbarButton'
+    import ToolbarButton from '../components/ToolbarButton';
 
     export default {
         components: {
-            ToolbarButton,
+            ToolbarButton
         },
 
         data() {
@@ -331,14 +282,14 @@
                     command_type: 'artisan',
                     command: '',
                     variables: [],
-                    flags: [],
+                    flags: []
                 },
                 history: {},
                 runningCommand: {},
                 help: '',
                 heading: '',
                 customCommands: {},
-                pollingTime: 1000,
+                pollingTime: 1000
             };
         },
 
@@ -357,7 +308,7 @@
                     command_type: 'artisan',
                     command: 'cache:forget nova-command-runner-history',
                     variables: [],
-                    flags: [],
+                    flags: []
                 });
             },
 
@@ -377,14 +328,14 @@
                 if (addEmptyOption) {
                     data.push({
                         value: '',
-                        label: '-',
+                        label: '-'
                     });
                 }
 
                 for (let option in options) {
                     data.push({
                         value: option,
-                        label: options[option],
+                        label: options[option]
                     });
                 }
 
@@ -401,17 +352,16 @@
             },
 
             getData() {
-                if (this.loading)
-                    return;
+                if (this.loading) return;
 
                 this.loading = true;
 
                 return Nova.request()
                     .get('/nova-vendor/stepanenko3/nova-command-runner')
-                    .then((response) => {
+                    .then(response => {
                         this.groups = [];
 
-                        response.data.commands.forEach((command) => {
+                        response.data.commands.forEach(command => {
                             let group = command.group;
 
                             if (this.groups.indexOf(group) < 0) {
@@ -427,30 +377,26 @@
                         this.pollingTime = response.data.polling_time;
 
                         if (this.customCommands) {
-                            this.customCommand.command_type = Object.keys(
-                                this.customCommands
-                            )[0];
+                            this.customCommand.command_type = Object.keys(this.customCommands)[0];
                         }
                     })
-                    .finally(() => this.loading = false);
+                    .finally(() => (this.loading = false));
             },
 
             runCommand() {
                 let readyToSubmit = true;
 
                 if (this.runningCommand.variables) {
-                    Object.keys(this.runningCommand.variables).forEach(
-                        (variable) => {
-                            if (!this.runningCommand.variables[variable].value) {
-                                readyToSubmit = false;
+                    Object.keys(this.runningCommand.variables).forEach(variable => {
+                        if (
+                            this.runningCommand.variables[variable].value == null ||
+                            this.runningCommand.variables[variable].value.length === 0
+                        ) {
+                            readyToSubmit = false;
 
-                                Nova.error(
-                                    this.runningCommand.variables[variable].label +
-                                        ' is required'
-                                );
-                            }
+                            Nova.error(this.runningCommand.variables[variable].label + ' is required');
                         }
-                    );
+                    });
                 }
 
                 if (!readyToSubmit) {
@@ -461,13 +407,10 @@
 
                 Nova.request()
                     .post('/nova-vendor/stepanenko3/nova-command-runner/run', {
-                        command: this.runningCommand,
+                        command: this.runningCommand
                     })
-                    .then((response) => {
-                        if (
-                            response.data.status &&
-                            response.data.status === 'success'
-                        ) {
+                    .then(response => {
+                        if (response.data.status && response.data.status === 'success') {
                             Nova.success(response.data.result);
                         } else {
                             Nova.error(response.data.result);
@@ -477,7 +420,7 @@
                         this.history = response.data.history;
                         this.closeModal();
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         this.running = false;
                     });
             },
@@ -494,12 +437,19 @@
 
             setupInterval() {
                 this.interval = setInterval(() => {
-                    if (!this.loading && (this.playing || this.history.filter(n => n.status === 'pending').length > 0)) {
+                    if (
+                        !this.loading &&
+                        (this.playing || this.history.filter(n => n.status === 'pending').length > 0)
+                    ) {
                         this.getData();
                     }
                 }, this.pollingTime);
             },
-        },
+            handleSelectChange(event, index) {
+                this.runningCommand.variables[index].value = event;
+                console.log(this.runningCommand.variables[index]);
+            }
+        }
     };
 </script>
 
