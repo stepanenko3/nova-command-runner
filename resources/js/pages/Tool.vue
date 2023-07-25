@@ -14,7 +14,7 @@
                 <div class="p-6 grid gap-6">
                     <p v-if="runningCommand.help">{{ runningCommand.help }}</p>
 
-                    <div v-for="(variable, index) in runningCommand.variables">
+                    <div v-for="(variable, index) in runningCommand.variables" :key="index">
                         <label
                             class="inline-block text-80 mb-2 leading-tight w-full capitalize"
                             >{{ variable.label }}</label
@@ -25,7 +25,7 @@
                             v-if="variable.field === 'select'"
                             :dusk="variable.label"
                             :options="getOptions(variable.options)"
-                            :selected="getSelectedOption(variable.options)"
+                            v-model:selected="variable.value"
                             @change="variable.value = $event"
                         />
 
@@ -134,8 +134,9 @@
 
         <Card class="grid md:grid-cols-12 gap-6 p-6">
             <div
-                v-for="group in groups"
+                v-for="(group, index) in groups"
                 class="md:col-span-3 grid gap-2 content-start"
+                :key="index"
             >
                 <Heading level="2">
                     {{ group ? group : __('Unnamed group') }}
@@ -247,7 +248,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="value in history">
+                    <tr v-for="(value, index) in history" :key="index">
                         <td
                             class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                         >
@@ -441,7 +442,10 @@
                 if (this.runningCommand.variables) {
                     Object.keys(this.runningCommand.variables).forEach(
                         (variable) => {
-                            if (!this.runningCommand.variables[variable].value) {
+                            if (
+                                this.runningCommand.variables[variable].value == null ||
+                                this.runningCommand.variables[variable].value.length === 0
+                            ) {
                                 readyToSubmit = false;
 
                                 Nova.error(
