@@ -153,7 +153,7 @@
                             !command.type ||
                             ['primary', 'danger'].indexOf(command.type) !== -1
                                 ? command.type === 'danger'
-                                    ? 'DangerButton'
+                                    ? 'CommandRunnerDangerButton'
                                     : 'DefaultButton'
                                 : BasicButton
                         "
@@ -310,10 +310,12 @@
 </template>
 
 <script>
+    import LoadingButton from '../components/LoadingButton'
     import ToolbarButton from '../components/ToolbarButton'
 
     export default {
         components: {
+            LoadingButton,
             ToolbarButton,
         },
 
