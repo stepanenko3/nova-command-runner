@@ -75,7 +75,7 @@
                                     runningCommand.type
                                 ) !== -1
                                     ? runningCommand.type === 'danger'
-                                        ? 'DangerButton'
+                                        ? 'CommandRunnerDangerButton'
                                         : 'DefaultButton'
                                     : BasicButton
                             "
