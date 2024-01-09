@@ -154,7 +154,11 @@ class CommandService
      */
     public static function getHistory()
     {
-        return Cache::get('nova-command-runner-history', []);
+        $history = Cache::get('nova-command-runner-history', []);
+
+        $history = array_slice($history, 0, config('nova-command-runner.history', 10));
+
+        return $history;
     }
 
     /**
