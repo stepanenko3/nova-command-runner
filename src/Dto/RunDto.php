@@ -5,13 +5,21 @@ namespace Stepanenko3\NovaCommandRunner\Dto;
 class RunDto
 {
     private string $id;
+
     private string $command;
+
     private string $group;
+
     private string $type;
+
     private string $run_by;
+
     private string $status;
+
     private string $result;
+
     private int $duration;
+
     private string $ran_at;
 
     public function __construct()

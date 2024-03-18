@@ -10,26 +10,26 @@ class ProgressBar
 {
     protected BaseProgressBar $progress_bar;
 
-    protected string $command_signature;
-
-    protected OutputStyle $output;
-
-    public function __construct(OutputStyle $output, string $command_signature, int $max)
-    {
-        $this->output = $output;
-        $this->progress_bar = $output->createProgressBar($max);
-        $this->command_signature = $command_signature;
+    public function __construct(
+        protected OutputStyle $output,
+        protected string $command_signature,
+        int $max,
+    ) {
+        $this->progress_bar = $this->output->createProgressBar($max);
 
         $this->updateNovaCommandsHistory();
     }
 
-    public function __call(string $name, array $arguments)
-    {
+    public function __call(
+        string $name,
+        array $arguments,
+    ) {
         return $this->progress_bar->{$name}(...$arguments);
     }
 
-    public function advance(int $step = 1)
-    {
+    public function advance(
+        int $step = 1,
+    ) {
         $this->progress_bar->advance($step);
 
         $this->updateNovaCommandsHistory();

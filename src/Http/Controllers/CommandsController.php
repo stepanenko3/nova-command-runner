@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-/**
- * Class CommandsController.
- */
 class CommandsController
 {
     public function show()
@@ -20,14 +17,12 @@ class CommandsController
         return inertia('NovaCommandRunner');
     }
 
-    /**
-     * @return array
-     */
-    public function index()
+    public function index(): array
     {
         $data = config('nova-command-runner');
         $raw_commands = $data['commands'] ?? [];
         $commands = [];
+
         if (is_array($commands)) {
             foreach ($raw_commands as $label => $command) {
                 $parsed = [
@@ -79,6 +74,7 @@ class CommandsController
         }
 
         $history = CommandService::getHistory();
+
         array_walk($history, function (&$val): void {
             $val['time'] = $val['time'] ? Carbon::createFromTimestamp($val['time'])->diffForHumans() : '';
         });
@@ -101,11 +97,9 @@ class CommandsController
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function run(Request $request)
-    {
+    public function run(
+        Request $request,
+    ): array {
         $command = CommandDto::createFromRequest($request);
 
         // Get history before running the command. Because if the user runs cache:forget command,
@@ -143,11 +137,10 @@ class CommandsController
         ];
     }
 
-    /**
-     * @return bool
-     */
-    protected function commandCanBeRun(CommandDto $command, $history)
-    {
+    protected function commandCanBeRun(
+        CommandDto $command,
+        $history,
+    ): bool {
         $group = $command->getGroup();
         [$command] = CommandService::parseCommandForQueue($command->getParsedCommand());
 
@@ -175,14 +168,10 @@ class CommandsController
             ->isEmpty();
     }
 
-    /**
-     * getMatchedPatterns.
-     *
-     * @param mixed $needle
-     * @param array $array
-     */
-    private function getMatchedPatterns($needle, array $haystack): array | false
-    {
+    private function getMatchedPatterns(
+        mixed $needle,
+        array $haystack,
+    ): array | false {
         $patterns = [];
         foreach ($haystack as $pattern) {
             if (Str::is($pattern, $needle)) {

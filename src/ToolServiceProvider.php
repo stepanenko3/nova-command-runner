@@ -10,9 +10,6 @@ use Stepanenko3\NovaCommandRunner\Http\Middleware\Authorize;
 
 class ToolServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->config();
@@ -26,17 +23,11 @@ class ToolServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Register the tool's routes.
-     */
     protected function routes(): void
     {
         if ($this->app->routesAreCached()) {

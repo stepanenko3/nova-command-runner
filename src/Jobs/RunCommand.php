@@ -12,9 +12,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
 
-/**
- * Class RunCommand.
- */
 class RunCommand implements ShouldQueue
 {
     use Dispatchable;
@@ -22,23 +19,12 @@ class RunCommand implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /**
-     * @var CommandDto
-     */
-    public $command;
+    public int $timeout;
 
-    /**
-     * @var RunDto
-     */
-    public $run;
-
-    public $timeout;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(CommandDto $command, RunDto $run)
-    {
+    public function __construct(
+        public CommandDto $command,
+        public RunDto $run
+    ) {
         $this->command = $command;
         $this->run = $run;
 
@@ -47,9 +33,6 @@ class RunCommand implements ShouldQueue
         }
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $this->run = CommandService::runCommand($this->command, $this->run);
@@ -57,22 +40,21 @@ class RunCommand implements ShouldQueue
         $this->updateHistory();
     }
 
-    public function failed(Throwable $exception): void
-    {
+    public function failed(
+        Throwable $exception,
+    ): void {
         $this->run->setStatus('error')
             ->setResult(str_replace(self::class, 'This command', $exception->getMessage()));
 
         $this->updateHistory();
     }
 
-    /**
-     * Update commands history.
-     */
     protected function updateHistory(): void
     {
         $history = CommandService::getHistory();
 
         $updated_history = [];
+
         foreach ($history as $entry) {
             if (isset($entry['id']) && $entry['id'] === $this->run->getId()) {
                 $entry = $this->run->toArray();
