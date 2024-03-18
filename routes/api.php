@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(CommandsController::class)->group(function () {
+Route::controller(CommandsController::class)->group(function (): void {
     Route::get('/', 'index');
-    Route::post('/run', 'run');
+    Route::post('run', 'run');
 });

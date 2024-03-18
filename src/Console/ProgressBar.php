@@ -10,21 +10,26 @@ class ProgressBar
 {
     protected BaseProgressBar $progress_bar;
 
-    protected string $command_signature;
-
-    protected OutputStyle $output;
-
-    public function __construct(OutputStyle $output, string $command_signature, int $max)
-    {
-        $this->output = $output;
-        $this->progress_bar = $output->createProgressBar($max);
-        $this->command_signature = $command_signature;
+    public function __construct(
+        protected OutputStyle $output,
+        protected string $command_signature,
+        int $max,
+    ) {
+        $this->progress_bar = $this->output->createProgressBar($max);
 
         $this->updateNovaCommandsHistory();
     }
 
-    public function advance(int $step = 1)
-    {
+    public function __call(
+        string $name,
+        array $arguments,
+    ) {
+        return $this->progress_bar->{$name}(...$arguments);
+    }
+
+    public function advance(
+        int $step = 1,
+    ) {
         $this->progress_bar->advance($step);
 
         $this->updateNovaCommandsHistory();
@@ -32,16 +37,11 @@ class ProgressBar
         return $this;
     }
 
-    public function finish()
+    public function finish(): void
     {
         $this->progress_bar->finish();
 
         $this->updateNovaCommandsHistory();
-    }
-
-    public function __call(string $name, array $arguments)
-    {
-        return $this->progress_bar->{$name}(...$arguments);
     }
 
     protected function updateNovaCommandsHistory(): void
@@ -68,7 +68,7 @@ class ProgressBar
 
     protected function buildOutput()
     {
-        $regex = "{%([a-z\-_]+)(?:\:([^%]+))?%}i";
+        $regex = '{%([a-z\\-_]+)(?:\\:([^%]+))?%}i';
         $format = $this->progress_bar::getFormatDefinition(BaseProgressBar::FORMAT_NORMAL);
 
         return preg_replace_callback(

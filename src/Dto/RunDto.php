@@ -2,242 +2,160 @@
 
 namespace Stepanenko3\NovaCommandRunner\Dto;
 
-/**
- * Class RunDto
- * @package Stepanenko3\NovaCommandRunner\Dto
- */
 class RunDto
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
 
-    /**
-     * @var string
-     */
-    private $command;
+    private string $command;
 
-    /**
-     * @var string
-     */
-    private $group;
+    private string $group;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * @var string
-     */
-    private $run_by;
+    private string $run_by;
 
-    /**
-     * @var string
-     */
-    private $status;
+    private string $status;
 
-    /**
-     * @var string
-     */
-    private $result;
+    private string $result;
 
-    /**
-     * @var int
-     */
-    private $duration;
+    private int $duration;
 
-    /**
-     * @var string
-     */
-    private $ran_at;
+    private string $ran_at;
 
-    /**
-     * RunDto constructor.
-     */
     public function __construct()
     {
         $this->run_by = auth()->check() ? auth()->user()->name : '';
         $this->id = uniqid();
     }
 
-    /**
-     * @return string
-     */
-    public function getRanAt()
+    public function getRanAt(): string
     {
         return $this->ran_at;
     }
 
-    /**
-     * @param $ran_at
-     * @return $this
-     */
-    public function setRanAt($ran_at)
-    {
+    public function setRanAt(
+        string $ran_at,
+    ): self {
         $this->ran_at = $ran_at;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param $id
-     * @return $this
-     */
-    public function setId($id)
-    {
+    public function setId(
+        string $id,
+    ): self {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCommand()
+    public function getCommand(): string
     {
         return $this->command;
     }
 
-    /**
-     * @param $command
-     * @return $this
-     */
-    public function setCommand($command)
-    {
+    public function setCommand(
+        string $command,
+    ): self {
         $this->command = $command;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getGroup()
+    public function getGroup(): string
     {
         return $this->group;
     }
 
-    /**
-     * @param $group
-     * @return $this
-     */
-    public function setGroup($group)
-    {
+    public function setGroup(
+        string $group,
+    ): self {
         $this->group = $group;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param $type
-     * @return $this
-     */
-    public function setType($type)
-    {
+    public function setType(
+        string $type,
+    ): self {
         $this->type = $type;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRunBy()
+    public function getRunBy(): string
     {
         return $this->run_by;
     }
 
-    /**
-     * @param $run_by
-     * @return $this
-     */
-    public function setRunBy($run_by)
-    {
+    public function setRunBy(
+        string $run_by,
+    ): self {
         $this->run_by = $run_by;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param $status
-     * @return $this
-     */
-    public function setStatus($status)
-    {
+    public function setStatus(
+        string $status,
+    ): self {
         $this->status = $status;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getResult()
+    public function getResult(): string
     {
         return $this->result;
     }
 
-    /**
-     * @param $result
-     * @return $this
-     */
-    public function setResult($result)
-    {
+    public function setResult(
+        string $result,
+    ): self {
         $this->result = $result;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    /**
-     * @param $duration
-     * @return $this
-     */
-    public function setDuration($duration)
-    {
+    public function setDuration(
+        int $duration,
+    ): self {
         $this->duration = $duration;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return [
-            'id'       => $this->id,
-            'type'     => $this->type,
-            'group'    => $this->group,
-            'run_by'   => $this->run_by,
-            'run'      => $this->command,
-            'status'   => $this->status,
-            'result'   => $this->result,
-            'time'     => $this->ran_at,
+            'id' => $this->id,
+            'type' => $this->type,
+            'group' => $this->group,
+            'run_by' => $this->run_by,
+            'run' => $this->command,
+            'status' => $this->status,
+            'result' => $this->result,
+            'time' => $this->ran_at,
             'duration' => $this->duration,
         ];
     }

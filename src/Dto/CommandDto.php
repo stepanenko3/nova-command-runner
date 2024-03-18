@@ -4,34 +4,27 @@ namespace Stepanenko3\NovaCommandRunner\Dto;
 
 use Illuminate\Http\Request;
 
-/**
- * Class CommandDto
- * @package Stepanenko3\NovaCommandRunner\Dto
- */
 class CommandDto
 {
-    private $raw_command;
+    private string $raw_command;
 
-    private $variables = [];
+    private array $variables = [];
 
-    private $flags = [];
+    private array $flags = [];
 
-    private $parsed_command;
+    private string $parsed_command;
 
-    private $type;
+    private string $type;
 
-    private $group;
+    private string $group;
 
-    private $output_size;
+    private ?int $output_size;
 
-    private $timeout;
+    private ?int $timeout;
 
-    /**
-     * @param Request $request
-     * @return CommandDto
-     */
-    public static function createFromRequest(Request $request)
-    {
+    public static function createFromRequest(
+        Request $request,
+    ): self {
         $command = new self();
         $command->setRawCommand($request->input('command.command'));
         $command->setParsedCommand($request->input('command.command'));
@@ -43,11 +36,11 @@ class CommandDto
         $variables = $request->input('command.variables');
         if (is_array($variables)) {
             foreach ($variables as $variable) {
-                if (isset($variable['label']) && isset($variable['value'])) {
-                    if (strpos($variable['label'], '--') !== false) {
+                if (isset($variable['label'], $variable['value'])) {
+                    if (str_contains($variable['label'], '--')) {
                         $variableName = explode('=', $variable['label'])[0];
                         $command->setParsedCommand(
-                            str_replace('{' . $variable['label'] . '}',  $variableName . '=' . $variable['value'], $command->getParsedCommand())
+                            str_replace('{' . $variable['label'] . '}', $variableName . '=' . $variable['value'], $command->getParsedCommand())
                         );
                     } else {
                         $command->setParsedCommand(
@@ -62,7 +55,7 @@ class CommandDto
         $flags = $request->input('command.flags');
         if (is_array($flags)) {
             foreach ($flags as $flag) {
-                if (isset($flag['selected']) && isset($flag['flag']) && $flag['selected']) {
+                if (isset($flag['selected'], $flag['flag'])   && $flag['selected']) {
                     $command->setParsedCommand($command->getParsedCommand() . ' ' . $flag['flag']);
                 }
             }
@@ -73,131 +66,91 @@ class CommandDto
         return $command;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawCommand()
+    public function getRawCommand(): string
     {
         return $this->raw_command;
     }
 
-    /**
-     * @param mixed $raw_command
-     */
-    public function setRawCommand($raw_command)
-    {
+    public function setRawCommand(
+        string $raw_command,
+    ): void {
         $this->raw_command = $raw_command;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getVariables()
+    public function getVariables(): array
     {
         return $this->variables;
     }
 
-    /**
-     * @param mixed $variables
-     */
-    public function setVariables($variables)
-    {
+    public function setVariables(
+        array $variables,
+    ): void {
         $this->variables = $variables;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFlags()
+    public function getFlags(): array
     {
         return $this->flags;
     }
 
-    /**
-     * @param mixed $flags
-     */
-    public function setFlags($flags)
-    {
+    public function setFlags(
+        array $flags
+    ): void {
         $this->flags = $flags;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getParsedCommand()
+    public function getParsedCommand(): string
     {
         return $this->parsed_command;
     }
 
-    /**
-     * @param mixed $parsed_command
-     */
-    public function setParsedCommand($parsed_command)
-    {
+    public function setParsedCommand(
+        string $parsed_command,
+    ): void {
         $this->parsed_command = $parsed_command;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
+    public function setType(
+        string $type,
+    ): void {
         $this->type = $type;
     }
 
-    /**
-     * @return ?int
-     */
-    public function getOutputSize()
+    public function getOutputSize(): int | bool | null
     {
         return $this->output_size;
     }
 
-    /**
-     * @param ?int $output_size
-     */
-    public function setOutputSize($output_size)
-    {
+    public function setOutputSize(
+        ?int $output_size,
+    ): void {
         $this->output_size = $output_size ?: false;
     }
 
-    /**
-     * @return ?int
-     */
-    public function getTimeout()
+    public function getTimeout(): ?int
     {
         return $this->timeout;
     }
 
-    /**
-     * @param ?int $timeout
-     */
-    public function setTimeout($timeout)
-    {
+    public function setTimeout(
+        ?int $timeout,
+    ): void {
         $this->timeout = $timeout;
     }
 
-    /**
-     * @return string
-     */
-    public function getGroup()
+    public function getGroup(): string
     {
         return $this->group;
     }
 
-    /**
-     * @param ?string $group
-     */
-    public function setGroup($group)
-    {
+    public function setGroup(
+        string $group,
+    ): void {
         $this->group = $group;
     }
 }

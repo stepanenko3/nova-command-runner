@@ -10,10 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-/**
- * Class CommandsController
- * @package Stepanenko3\NovaCommandRunner\Http\Controllers
- */
 class CommandsController
 {
     public function show()
@@ -21,14 +17,12 @@ class CommandsController
         return inertia('NovaCommandRunner');
     }
 
-    /**
-     * @return array
-     */
-    public function index()
+    public function index(): array
     {
         $data = config('nova-command-runner');
-        $raw_commands = isset($data['commands']) ? $data['commands'] : [];
+        $raw_commands = $data['commands'] ?? [];
         $commands = [];
+
         if (is_array($commands)) {
             foreach ($raw_commands as $label => $command) {
                 $parsed = [
@@ -36,13 +30,13 @@ class CommandsController
                     'command' => $command['run'],
                     'variables' => [],
                     'flags' => [],
-                    'type' => isset($command['type']) ? $command['type'] : 'primary',
-                    'group' => isset($command['group']) ? $command['group'] : 'Unnamed Group',
-                    'help' => isset($command['help']) ? $command['help'] : 'Are you sure you want to run this command?',
+                    'type' => $command['type'] ?? 'primary',
+                    'group' => $command['group'] ?? 'Unnamed Group',
+                    'help' => $command['help'] ?? 'Are you sure you want to run this command?',
                     'command_type' => isset($command['command_type']) && $command['command_type'] === 'bash' ? 'bash' : 'artisan',
-                    'output_size' => isset($command['output_size']) ? $command['output_size'] : null,
-                    'timeout' => isset($command['timeout']) ? $command['timeout'] : null,
-                    'unique' => isset($command['unique']) ? $command['unique'] : false,
+                    'output_size' => $command['output_size'] ?? null,
+                    'timeout' => $command['timeout'] ?? null,
+                    'unique' => $command['unique'] ?? false,
                 ];
 
                 preg_match_all('~(?<={).+?(?=})~', $command['run'], $matches);
@@ -55,11 +49,11 @@ class CommandsController
 
                 if (isset($command['flags']) && is_array($command['flags'])) {
                     foreach ($command['flags'] as $flag => $label) {
-                        array_push($parsed['flags'], [
+                        $parsed['flags'][] = [
                             'label' => $label,
                             'flag' => $flag,
-                            'selected' => false
-                        ]);
+                            'selected' => false,
+                        ];
                     }
                 }
 
@@ -67,20 +61,21 @@ class CommandsController
                     foreach ($command['variables'] as $variable) {
                         $parsed['variables'][$variable['label']] = [
                             'label' => $variable['label'],
-                            'field' => isset($variable['field']) ? $variable['field'] : 'text',
+                            'field' => $variable['field'] ?? 'text',
                             'value' => '',
-                            'options' => isset($variable['options']) ? $variable['options'] : [],
-                            'placeholder' => isset($variable['placeholder']) ? $variable['placeholder'] : $variable['label']
+                            'options' => $variable['options'] ?? [],
+                            'placeholder' => $variable['placeholder'] ?? $variable['label'],
                         ];
                     }
                 }
 
-                array_push($commands, $parsed);
+                $commands[] = $parsed;
             }
         }
 
         $history = CommandService::getHistory();
-        array_walk($history, function (&$val) {
+
+        array_walk($history, function (&$val): void {
             $val['time'] = $val['time'] ? Carbon::createFromTimestamp($val['time'])->diffForHumans() : '';
         });
 
@@ -95,19 +90,16 @@ class CommandsController
         return [
             'commands' => $commands,
             'history' => $history,
-            'help' => isset($data['help']) ? $data['help'] : '',
-            'heading' => isset($data['navigation_label']) ? $data['navigation_label'] : 'Command Runner',
+            'help' => $data['help'] ?? '',
+            'heading' => $data['navigation_label'] ?? 'Command Runner',
             'custom_commands' => $custom_commands,
             'polling_time' => config('nova-command-runner.polling_time', 1000),
         ];
     }
 
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function run(Request $request)
-    {
+    public function run(
+        Request $request,
+    ): array {
         $command = CommandDto::createFromRequest($request);
 
         // Get history before running the command. Because if the user runs cache:forget command,
@@ -134,7 +126,7 @@ class CommandsController
 
         CommandService::saveHistory($history);
 
-        array_walk($history, function (&$val) {
+        array_walk($history, function (&$val): void {
             $val['time'] = $val['time'] ? Carbon::createFromTimestamp($val['time'])->diffForHumans() : '';
         });
 
@@ -145,36 +137,10 @@ class CommandsController
         ];
     }
 
-    /**
-     * getMatchedPatterns
-     *
-     * @param  mixed $needle
-     * @param  array $array
-     * @return array|false
-     */
-    private function getMatchedPatterns($needle, array $haystack): array | false
-    {
-        $patterns = [];
-        foreach ($haystack as $pattern) {
-            if (Str::is($pattern, $needle)) {
-                $patterns[] = $pattern;
-            }
-        }
-
-        if (count($patterns) > 0) {
-            return $patterns;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param CommandDto $command
-     * @param $history
-     * @return bool
-     */
-    protected function commandCanBeRun(CommandDto $command, $history)
-    {
+    protected function commandCanBeRun(
+        CommandDto $command,
+        $history,
+    ): bool {
         $group = $command->getGroup();
         [$command] = CommandService::parseCommandForQueue($command->getParsedCommand());
 
@@ -200,5 +166,23 @@ class CommandsController
                 return Arr::get($entry, 'status') === 'pending' && $condition;
             })
             ->isEmpty();
+    }
+
+    private function getMatchedPatterns(
+        mixed $needle,
+        array $haystack,
+    ): array | false {
+        $patterns = [];
+        foreach ($haystack as $pattern) {
+            if (Str::is($pattern, $needle)) {
+                $patterns[] = $pattern;
+            }
+        }
+
+        if (count($patterns) > 0) {
+            return $patterns;
+        }
+
+        return false;
     }
 }

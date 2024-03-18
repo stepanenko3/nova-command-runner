@@ -1,0 +1,36 @@
+# .github/workflows/duster.yml
+name: Front lint
+
+on:
+  push:
+    branches: main
+  pull_request:
+
+env:
+  NODE_VERSION: 20.10.0
+
+jobs:
+  application-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          cache: "npm"
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "latest"
+
+      - name: "composer install"
+        run: composer install --no-cache --ignore-platform-reqs --no-interaction --prefer-dist --optimize-autoloader --apcu-autoloader
+
+
+      - run: npm i
+      - run: npm run nova:install
+      - run: npm run prod
