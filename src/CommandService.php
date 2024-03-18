@@ -12,26 +12,15 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
 
-/**
- * Class CommandService.
- */
 class CommandService
 {
-    /**
-     * @var string
-     */
     public static $TYPE_ARTISAN = 'artisan';
-
-    /**
-     * @var string
-     */
     public static $TYPE_BASH = 'bash';
 
-    /**
-     * @return RunDto
-     */
-    public static function runCommand(CommandDto $command, RunDto $run)
-    {
+    public static function runCommand(
+        CommandDto $command,
+        RunDto $run,
+    ) {
         if (stripos($command->getParsedCommand(), '--should-queue')) {
             [$parsed_command, $connection, $queue] = self::parseCommandForQueue($command->getParsedCommand());
 
@@ -90,13 +79,9 @@ class CommandService
         return $run;
     }
 
-    /**
-     * @param mixed $command
-     *
-     * @return array
-     */
-    public static function parseCommandForQueue($command)
-    {
+    public static function parseCommandForQueue(
+        $command,
+    ): array {
         $command = str_replace('--should-queue', '', $command);
 
         $queue = null;
@@ -125,14 +110,12 @@ class CommandService
         return [$parsed, $connection, $queue];
     }
 
-    /**
-     * @param null $queue
-     * @param null $connection
-     *
-     * @return RunDto
-     */
-    public static function queueCommand(CommandDto $command, RunDto $run, $queue = null, $connection = null)
-    {
+    public static function queueCommand(
+        CommandDto $command,
+        RunDto $run,
+        $queue = null,
+        $connection = null,
+    ): RunDto {
         $job = RunCommand::dispatch($command, $run)->delay(now()->addSeconds(5));
 
         if ($queue) {
@@ -149,23 +132,16 @@ class CommandService
         return $run;
     }
 
-    /**
-     * @return array
-     */
-    public static function getHistory()
+    public static function getHistory(): array
     {
         $history = Cache::get('nova-command-runner-history', []);
 
         return array_slice($history, 0, config('nova-command-runner.history', 10));
     }
 
-    /**
-     * @param mixed $history
-     *
-     * @return mixed
-     */
-    public static function saveHistory($history)
-    {
+    public static function saveHistory(
+        $history,
+    ) {
         Cache::forever('nova-command-runner-history', $history);
 
         return $history;
