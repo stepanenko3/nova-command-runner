@@ -2,12 +2,14 @@
 
 namespace Stepanenko3\NovaCommandRunner;
 
+use Exception;
 use Stepanenko3\NovaCommandRunner\Dto\CommandDto;
 use Stepanenko3\NovaCommandRunner\Dto\RunDto;
 use Stepanenko3\NovaCommandRunner\Jobs\RunCommand;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
 
 /**
@@ -53,7 +55,7 @@ class CommandService
         $start = microtime(true);
 
         try {
-            $buffer = new \Symfony\Component\Console\Output\BufferedOutput();
+            $buffer = new BufferedOutput();
             if ($command->getType() === self::$TYPE_ARTISAN) {
                 Artisan::call($command->getParsedCommand(), [], $buffer);
             } elseif ($command->getType() === self::$TYPE_BASH) {
@@ -62,7 +64,7 @@ class CommandService
                         $buffer->writeln($message);
                     });
             } else {
-                throw new \Exception('Unknown command type: ' . $command->getType());
+                throw new Exception('Unknown command type: ' . $command->getType());
             }
 
             $output = $buffer->fetch();
@@ -78,7 +80,7 @@ class CommandService
 
             $run->setStatus('success')
                 ->setResult($output);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $run->setResult($exception->getMessage());
             $run->setStatus('error');
         }
@@ -89,6 +91,8 @@ class CommandService
     }
 
     /**
+     * @param mixed $command
+     *
      * @return array
      */
     public static function parseCommandForQueue($command)
@@ -156,6 +160,8 @@ class CommandService
     }
 
     /**
+     * @param mixed $history
+     *
      * @return mixed
      */
     public static function saveHistory($history)
