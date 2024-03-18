@@ -11,8 +11,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 /**
- * Class CommandService
- * @package Stepanenko3\NovaCommandRunner
+ * Class CommandService.
  */
 class CommandService
 {
@@ -27,14 +26,11 @@ class CommandService
     public static $TYPE_BASH = 'bash';
 
     /**
-     * @param CommandDto $command
-     * @param RunDto $run
      * @return RunDto
      */
     public static function runCommand(CommandDto $command, RunDto $run)
     {
         if (stripos($command->getParsedCommand(), '--should-queue')) {
-
             [$parsed_command, $connection, $queue] = self::parseCommandForQueue($command->getParsedCommand());
 
             $command->setParsedCommand($parsed_command);
@@ -60,9 +56,9 @@ class CommandService
             $buffer = new \Symfony\Component\Console\Output\BufferedOutput();
             if ($command->getType() === self::$TYPE_ARTISAN) {
                 Artisan::call($command->getParsedCommand(), [], $buffer);
-            } else if ($command->getType() === self::$TYPE_BASH) {
+            } elseif ($command->getType() === self::$TYPE_BASH) {
                 Process::fromShellCommandline($command->getParsedCommand(), base_path(), null, null, null)
-                    ->run(function ($type, $message) use ($buffer) {
+                    ->run(function ($type, $message) use ($buffer): void {
                         $buffer->writeln($message);
                     });
             } else {
@@ -87,13 +83,12 @@ class CommandService
             $run->setStatus('error');
         }
 
-        $run->setDuration(round((microtime(true) - $start), 4));
+        $run->setDuration(round(microtime(true) - $start, 4));
 
         return $run;
     }
 
     /**
-     * @param $command
      * @return array
      */
     public static function parseCommandForQueue($command)
@@ -108,11 +103,13 @@ class CommandService
         foreach (explode(' ', $command) as $argv) {
             if (Str::startsWith($argv, '--cr-queue=')) {
                 $queue = str_replace('--cr-queue=', '', $argv);
+
                 continue;
             }
 
             if (Str::startsWith($argv, '--cr-connection=')) {
                 $connection = str_replace('--cr-connection=', '', $argv);
+
                 continue;
             }
 
@@ -125,10 +122,9 @@ class CommandService
     }
 
     /**
-     * @param CommandDto $command
-     * @param RunDto $run
      * @param null $queue
      * @param null $connection
+     *
      * @return RunDto
      */
     public static function queueCommand(CommandDto $command, RunDto $run, $queue = null, $connection = null)
@@ -156,18 +152,16 @@ class CommandService
     {
         $history = Cache::get('nova-command-runner-history', []);
 
-        $history = array_slice($history, 0, config('nova-command-runner.history', 10));
-
-        return $history;
+        return array_slice($history, 0, config('nova-command-runner.history', 10));
     }
 
     /**
-     * @param $history
      * @return mixed
      */
     public static function saveHistory($history)
     {
         Cache::forever('nova-command-runner-history', $history);
+
         return $history;
     }
 }

@@ -12,28 +12,32 @@ class ToolServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->config();
 
-        $this->app->booted(function () {
+        $this->app->booted(function (): void {
             $this->routes();
         });
 
-        Nova::serving(function (ServingNova $event) {
+        Nova::serving(function (ServingNova $event): void {
             //
         });
     }
 
     /**
-     * Register the tool's routes.
-     *
-     * @return void
+     * Register any application services.
      */
-    protected function routes()
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Register the tool's routes.
+     */
+    protected function routes(): void
     {
         if ($this->app->routesAreCached()) {
             return;
@@ -47,17 +51,7 @@ class ToolServiceProvider extends ServiceProvider
             ->group(__DIR__ . '/../routes/api.php');
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    private function config()
+    private function config(): void
     {
         if ($this->app->runningInConsole()) {
             // Publish config

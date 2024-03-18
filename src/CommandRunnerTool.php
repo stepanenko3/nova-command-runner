@@ -9,7 +9,7 @@ use Laravel\Nova\Menu\MenuSection;
 
 class CommandRunnerTool extends Tool
 {
-    public function boot()
+    public function boot(): void
     {
         Nova::script('nova-command-runner', __DIR__ . '/../dist/js/tool.js');
     }

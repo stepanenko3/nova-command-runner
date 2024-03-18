@@ -1,0 +1,17 @@
+{
+    "exclude": [
+        "bootstrap",
+        "config"
+    ],
+    "scripts": {
+        "lint": {
+            "phpstan": [
+                "./vendor/bin/phpstan",
+                "analyse",
+                "src",
+                "--memory-limit=1G"
+            ]
+        }
+    },
+    "processTimeout": 120
+}
