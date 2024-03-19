@@ -1,20 +1,23 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production",
+        "dev": "vite build --watch",
+        "build": "vite build",
         "nova:install": "npm --prefix='vendor/laravel/nova' ci"
     },
     "devDependencies": {
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@vitejs/plugin-vue": "^5.0.4",
         "@vue/compiler-sfc": "^3.2.22",
-        "laravel-mix": "^6.0.41",
-        "postcss": "^8.3.11",
+        "postcss": "^8.4.37",
+        "vite": "^5.1.6",
         "vue-loader": "^16.8.3"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@headlessui/tailwindcss": "^0.2.0",
+        "@headlessui/vue": "^1.7.19",
+        "autoprefixer": "^10.4.18",
+        "tailwindcss": "^3.4.1"
+    }
 }
