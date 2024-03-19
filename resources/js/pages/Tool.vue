@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nova-command-runner">
         <div class="text-lg font-semibold mb-6">
             {{ heading }}
         </div>

@@ -4,6 +4,7 @@ module.exports = {
     theme: {
         extend: {},
     },
+    important: '.nova-command-runner',
     plugins: [],
     darkMode: 'class'
 };
