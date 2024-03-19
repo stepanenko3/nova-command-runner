@@ -33,4 +33,4 @@ jobs:
 
       - run: npm i
       - run: npm run nova:install
-      - run: npm run prod
+      - run: npm run build

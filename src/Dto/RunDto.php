@@ -6,21 +6,21 @@ class RunDto
 {
     private string $id;
 
-    private string $command;
+    private ?string $command = null;
 
-    private string $group;
+    private ?string $group = null;
 
-    private string $type;
+    private ?string $type = null;
 
     private string $run_by;
 
-    private string $status;
+    private ?string $status = null;
 
-    private string $result;
+    private ?string $result = null;
 
-    private int $duration;
+    private ?float $duration = null;
 
-    private string $ran_at;
+    private ?string $ran_at = null;
 
     public function __construct()
     {
@@ -132,13 +132,13 @@ class RunDto
         return $this;
     }
 
-    public function getDuration(): int
+    public function getDuration(): float
     {
         return $this->duration;
     }
 
     public function setDuration(
-        int $duration,
+        float $duration,
     ): self {
         $this->duration = $duration;
 

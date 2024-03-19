@@ -16,7 +16,7 @@ class CommandDto
 
     private string $type;
 
-    private string $group;
+    private ?string $group;
 
     private ?int $output_size;
 
@@ -143,13 +143,13 @@ class CommandDto
         $this->timeout = $timeout;
     }
 
-    public function getGroup(): string
+    public function getGroup(): ?string
     {
         return $this->group;
     }
 
     public function setGroup(
-        string $group,
+        ?string $group,
     ): void {
         $this->group = $group;
     }

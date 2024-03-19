@@ -1,7 +1,6 @@
-import CommandRunnerDangerButton from './components/DangerButton'
-import Tool from './pages/Tool'
+import Tool from './pages/Tool.vue'
+import '../css/tool.css'
 
-Nova.booting((app, store) => {
-  Nova.component('CommandRunnerDangerButton', CommandRunnerDangerButton)
+Nova.booting(() => {
   Nova.inertia('NovaCommandRunner', Tool)
 })
