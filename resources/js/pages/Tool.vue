@@ -197,7 +197,7 @@
         </div>
 
         <div
-            class="fixed inset-0 z-[60] bg-gray-500/75 dark:bg-gray-900/75 flex items-center justify-center"
+            class="fixed inset-0 z-[60] bg-gray-500/75 dark:bg-gray-900/75 flex items-center justify-center p-3"
             v-if="modalOpen"
         >
             <div
@@ -205,7 +205,7 @@
                 @click.prevent="() => (modalOpen = false)"
             ></div>
             <div
-                class="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow min-w-80 md:w-1/2 max-w-full"
+                class="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow min-w-80 md:w-1/2 max-w-full max-h-full overflow-y-auto"
             >
                 <div
                     class="absolute top-0 right-0 w-5 cursor-pointer hover:opacity-75 text-lg"
