@@ -6,7 +6,7 @@
             'bg-yellow-500': type === 'warning',
             'bg-blue-500': type === 'info',
             'bg-green-500': type === 'success',
-            'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-300': type === 'gray',
+            'bg-gray-200 !text-gray-900 dark:bg-gray-700 dark:!text-gray-300': type === 'gray',
             'pointer-events-none': loading,
         }"
     >
