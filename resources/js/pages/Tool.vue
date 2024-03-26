@@ -280,7 +280,7 @@
                 </div>
 
                 <div class="flex items-center space-x-3 mt-5">
-                    <Button type="gray" @click.prevent="closeModal">
+                    <Button theme="gray" @click.prevent="closeModal">
                         {{ __("Cancel") }}
                     </Button>
 
