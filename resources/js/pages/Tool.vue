@@ -47,7 +47,7 @@
                     <Button
                         v-if="command.group == group"
                         :loading="!modalOpen && running"
-                        :type="command.type"
+                        :theme="command.type"
                         @click="openModal(command)"
                     >
                         {{ command.label }}
@@ -287,7 +287,7 @@
                     <Button
                         :loading="running"
                         @click="runCommand()"
-                        :type="runningCommand.type"
+                        :theme="runningCommand.type"
                     >
                         {{ runningCommand.label }}
                     </Button>
@@ -486,9 +486,5 @@ function runCustomCommand() {
         variables: [],
         flags: [],
     });
-}
-
-function __(n) {
-    return n;
 }
 </script>
