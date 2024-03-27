@@ -68,6 +68,7 @@
                     @click.prevent="getData"
                     :loading="loading"
                     type="refresh"
+                    title="Refresh"
                 />
 
                 <ToolbarButton
@@ -78,12 +79,14 @@
                     }"
                     type="clock"
                     class="w-8 h-8"
+                    title="Polling"
                 />
 
                 <ToolbarButton
                     @click.prevent="clearHistory"
                     type="trash"
                     class="text-red-500"
+                    title="Clear history"
                 />
             </div>
         </div>
