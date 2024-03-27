@@ -47,7 +47,7 @@
                     <Button
                         v-if="command.group == group"
                         :loading="!modalOpen && running"
-                        :type="command.type"
+                        :theme="command.type"
                         @click="openModal(command)"
                     >
                         {{ command.label }}
@@ -68,7 +68,7 @@
                     @click.prevent="getData"
                     :loading="loading"
                     type="refresh"
-                    title="{{ __('Refresh') }}"
+                    :title="__('Refresh')"
                 />
 
                 <ToolbarButton
@@ -79,14 +79,14 @@
                     }"
                     type="clock"
                     class="w-8 h-8"
-                    title="{{ __('Polling') }}"
+                    :title="__('Polling')"
                 />
 
                 <ToolbarButton
                     @click.prevent="clearHistory"
                     type="trash"
                     class="text-red-500"
-                    title="{{ __('Clear history') }}"
+                    :title="__('Clear history')"
                 />
             </div>
         </div>
@@ -290,7 +290,7 @@
                     <Button
                         :loading="running"
                         @click="runCommand()"
-                        :type="runningCommand.type"
+                        :theme="runningCommand.type"
                     >
                         {{ runningCommand.label }}
                     </Button>
@@ -489,9 +489,5 @@ function runCustomCommand() {
         variables: [],
         flags: [],
     });
-}
-
-function __(n) {
-    return n;
 }
 </script>

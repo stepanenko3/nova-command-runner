@@ -1,6 +1,7 @@
 {
   "resources/js/tool.js": {
     "file": "js/tool.js",
+    "name": "tool",
     "src": "resources/js/tool.js",
     "isEntry": true
   },
