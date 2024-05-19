@@ -24,7 +24,11 @@ class RunDto
 
     public function __construct()
     {
-        $this->run_by = auth()->check() ? auth()->user()->name : '';
+        if (auth()->check() && method_exists(auth()->user(), 'getArtisanRunByName')) {
+            $this->run_by = auth()->user()->getArtisanRunByName();
+        } else {
+            $this->run_by = __('unknown');
+        }
         $this->id = uniqid();
     }
 
