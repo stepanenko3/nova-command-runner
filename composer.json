@@ -40,6 +40,6 @@
     "prefer-stable": true,
     "require-dev": {
         "phpstan/phpstan": "^1.10",
-        "tightenco/duster": "^2.7"
+        "tightenco/duster": "^3.0"
     }
 }
