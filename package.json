@@ -10,7 +10,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@vitejs/plugin-vue": "^5.0.4",
         "@vue/compiler-sfc": "^3.4.25",
-        "postcss": "^8.4.38",
+        "postcss": "^8.4.45",
         "vite": "^5.2.10"
     },
     "dependencies": {
