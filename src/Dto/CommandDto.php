@@ -37,14 +37,19 @@ class CommandDto
         if (is_array($variables)) {
             foreach ($variables as $variable) {
                 if (isset($variable['label'], $variable['value'])) {
+                    $value = $variable['value'];
+                    if (!empty($value) && (str_contains($value, '"') || str_contains($value, ' '))) {
+                        $value = '"' . str_replace('"', '\"', $value) . '"';
+                    }
+
                     if (str_contains($variable['label'], '--')) {
                         $variableName = explode('=', $variable['label'])[0];
                         $command->setParsedCommand(
-                            str_replace('{' . $variable['label'] . '}', $variableName . '=' . $variable['value'], $command->getParsedCommand())
+                            str_replace('{' . $variable['label'] . '}', $variableName . '=' . $value, $command->getParsedCommand())
                         );
                     } else {
                         $command->setParsedCommand(
-                            str_replace('{' . $variable['label'] . '}', $variable['value'], $command->getParsedCommand())
+                            str_replace('{' . $variable['label'] . '}', $value, $command->getParsedCommand())
                         );
                     }
                 }
