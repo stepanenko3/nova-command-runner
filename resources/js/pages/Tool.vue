@@ -302,11 +302,14 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useLocalization } from "LaravelNova";
 import Button from "../components/Button.vue";
 import ToolbarButton from "../components/ToolbarButton.vue";
 
-const { __ } = useLocalization()
+const __ = (key) => {
+    return window.Nova && window.Nova.config && window.Nova.config('translations') && window.Nova.config('translations')[key] 
+        ? window.Nova.config('translations')[key] 
+        : key;
+};
 const loading = ref(false);
 const playing = ref(false);
 const running = ref(false);

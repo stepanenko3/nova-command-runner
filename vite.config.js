@@ -1,9 +1,10 @@
+import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [vue(), tailwindcss()],
 
     define: {
         "process.env": process.env, // Vite ditched process.env, so we need to pass it in
