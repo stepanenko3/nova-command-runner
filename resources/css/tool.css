@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/*
+ * Nova toggles dark mode via a `.dark` class on the document, but Tailwind v4
+ * defaults the `dark:` variant to the `prefers-color-scheme` media query.
+ * Re-bind it to the class so the variant follows Nova's theme, not the OS.
+ * https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+ */
+@custom-variant dark (&:where(.dark, .dark *));
